@@ -1,22 +1,20 @@
-source 'https://cdn.cocoapods.org/'
-
 platform :ios, '13.0'
 
 target 'Runner' do
   use_frameworks!
+
+  # التبعيات المشتركة
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
-  pod 'GoogleMaps'          # Add Google Maps dependency if needed
-  pod 'GooglePlaces'        # Add Google Places dependency if needed
-  pod 'connectivity_plus', '~> 5.0.2'
-    # Add any additional pods if required
-end
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
+  pod 'connectivity_plus'
 
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['SWIFT_VERSION'] = '5.0' # تحديد إصدار Swift
-    end
+  # التبعيات الخاصة بكل فلافر
+  if ENV['FLAVOR'] == 'dev'
+    # التبعيات الخاصة بفلافر التطوير
+  elsif ENV['FLAVOR'] == 'prod'
+    # التبعيات الخاصة بفلافر الإنتاج
   end
 end
