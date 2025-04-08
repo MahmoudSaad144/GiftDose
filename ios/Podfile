@@ -2,10 +2,6 @@ source 'https://cdn.cocoapods.org/'
 
 platform :ios, '13.0'
 
-# Ensure that this matches the configuration for your Flutter version
-flutter_application_path = '../'
-load File.join(flutter_application_path, '.flutter-plugins-dependencies')
-
 target 'Runner' do
   use_frameworks!
   pod 'Firebase/Core'
