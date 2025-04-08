@@ -1,54 +1,36 @@
 workflows:
-  ios-workflow:
-    name: iOS Build Workflow
-    instance_type: mac_mini_m1
+  build_ios:
+    name: Build iOS with Flutter 3.29.2
+    max_build_duration: 60  # أقصى مدة للبناء (بالدقايق) ممكن تعديلها لو عايز
     environment:
-      groups:
-        - ios_certs # إذا كنت تستخدم Code Signing
-      vars:
-        XCODE_WORKSPACE: "Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
+      flutter: "3.29.2"
     scripts:
-      # ----------------------------
-      # مرحلة ما قبل البناء (Pre-Build)
-      # ----------------------------
-      - name: Pre-build Cleanup & Setup
+      - name: تنظيف شامل
         script: |
-          # تنظيف شامل
           flutter clean
           rm -rf ios/Pods
           rm -rf ios/Podfile.lock
           rm -rf ios/Runner.xcworkspace
 
-          # إنشاء هيكل symlinks يدويًا لـ connectivity_plus
+      - name: إنشاء هيكل symlinks يدويًا
+        script: |
           mkdir -p .symlinks/plugins/connectivity_plus/ios
           curl -o .symlinks/plugins/connectivity_plus/ios/connectivity_plus.podspec \
-            https://raw.githubusercontent.com/fluttercommunity/plus_plugins/main/packages/connectivity_plus/connectivity_plus/ios/connectivity_plus.podspec
+          https://raw.githubusercontent.com/fluttercommunity/plus_plugins/main/packages/connectivity_plus/connectivity_plus/ios/connectivity_plus.podspec
 
-          # إصلاح ذاكرة التخزين المؤقت لـ Flutter
+      - name: إعادة توليد ملفات Flutter
+        script: |
           flutter pub get
           flutter pub cache repair
 
-      # ----------------------------
-      # إعداد iOS و CocoaPods
-      # ----------------------------
-      - name: iOS Pods Setup
+      - name: إعداد iOS
         script: |
           cd ios
           pod deintegrate
           rm -rf Pods Podfile.lock
+
+      - name: تثبيت CocoaPods
+        script: |
+          sudo gem install cocoapods
           pod repo update
           pod install --repo-update --verbose
-
-      # ----------------------------
-      # مرحلة البناء (Build)
-      # ----------------------------
-      - name: Build iOS App
-        script: |
-          flutter build ios --no-codesign --release
-    artifacts:
-      - build/ios/ipa/**/*.ipa
-    publishing:
-      email:
-        recipients:
-          - mahmoudlove1218@gmail.com # استبدل بإيميلك
