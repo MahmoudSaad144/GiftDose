@@ -1,43 +1,28 @@
 workflows:
   build_ios:
     name: Build iOS with Flutter 3.29.2
-    max_build_duration: 60  # ممكن تغيرها حسب متطلباتك
+    max_build_duration: 60
     environment:
       flutter: "3.29.2"
+      xcode: latest
+      cocoapods: default
     scripts:
-      - name: تنظيف شامل
+      - name: تنظيف المشروع
         script: |
           flutter clean
-          rm -rf ios/Pods
-          rm -rf ios/Podfile.lock
-          rm -rf ios/Runner.xcworkspace
+          rm -rf ios/Pods ios/Podfile.lock ios/Runner.xcworkspace
 
-      - name: إنشاء هيكل symlinks يدويًا
-        script: |
-          mkdir -p .symlinks/plugins/connectivity_plus/ios
-          curl -o .symlinks/plugins/connectivity_plus/ios/connectivity_plus.podspec \
-          https://raw.githubusercontent.com/fluttercommunity/plus_plugins/main/packages/connectivity_plus/connectivity_plus/ios/connectivity_plus.podspec
-
-      - name: إعادة توليد ملفات Flutter
+      - name: تثبيت الحزم
         script: |
           flutter pub get
-          flutter pub cache repair
 
-      - name: إعداد iOS وتثبيت CocoaPods
+      - name: بناء التطبيق iOS
         script: |
           cd ios
-          # لو مش موجود Podfile، ننشئ واحد جديد بدون توقيع
-          if [ ! -f "Podfile" ]; then
-            echo "No Podfile found. Generating one using flutter build ios..."
-            flutter build ios --no-codesign
-          fi
-          pod deintegrate
-          rm -rf Pods Podfile.lock
-          # تثبيت CocoaPods
-          sudo gem install cocoapods
-          pod repo update
-          pod install --repo-update --verbose
-          
-      - name: بناء تطبيق iOS
-        script: |
+          pod install --repo-update
+          cd ..
           flutter build ios --release --no-codesign
+
+    artifacts:
+      - build/ios/iphoneos/Runner.app
+      - build/ios/ipa/*.ipa
