@@ -37,3 +37,7 @@ workflows:
           sudo gem install cocoapods
           pod repo update
           pod install --repo-update --verbose
+          
+      - name: بناء تطبيق iOS
+        script: |
+          flutter build ios --release --no-codesign
