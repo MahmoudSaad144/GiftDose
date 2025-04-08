@@ -9,7 +9,6 @@ target 'Runner' do
   pod 'Firebase/Analytics'
   pod 'GoogleMaps'
   pod 'GooglePlaces'
-  pod 'connectivity_plus'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
