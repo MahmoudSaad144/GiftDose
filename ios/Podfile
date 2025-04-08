@@ -1,7 +1,11 @@
+# تحديد الـ source للمكتبات
+source 'https://cdn.cocoapods.org/'
+
 platform :ios, '13.0'
 
 target 'Runner' do
   use_frameworks!
+
   # Pods for Runner
   pod 'Firebase/Core'
   pod 'Firebase/Analytics'
