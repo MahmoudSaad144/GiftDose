@@ -2,11 +2,17 @@ source 'https://cdn.cocoapods.org/'
 
 platform :ios, '13.0'
 
+# Ensure that this matches the configuration for your Flutter version
+flutter_application_path = '../'
+load File.join(flutter_application_path, '.flutter-plugins-dependencies')
+
 target 'Runner' do
   use_frameworks!
-
-  # Pods for Runner
   pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
-  pod 'GoogleMaps'
+  pod 'GoogleMaps'          # Add Google Maps dependency if needed
+  pod 'GooglePlaces'        # Add Google Places dependency if needed
+
+  # Add any additional pods if required
 end
