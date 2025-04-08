@@ -2,7 +2,7 @@ platform :ios, '13.0'
 
 target 'Runner' do
   use_frameworks!
-  pod 'connectivity_plus', :path => '../.symlinks/plugins/connectivity_plus/ios' # تأكد من وجود "../"
+  pod 'connectivity_plus', :path => 'Flutter/plugins/connectivity_plus/ios'
   
   # باقي التبعيات
   pod 'Firebase/Core'
