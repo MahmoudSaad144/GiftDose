@@ -1,7 +1,7 @@
 workflows:
   build_ios:
     name: Build iOS with Flutter 3.29.2
-    max_build_duration: 60  # أقصى مدة للبناء (بالدقايق) ممكن تعديلها لو عايز
+    max_build_duration: 60  # ممكن تغيرها حسب متطلباتك
     environment:
       flutter: "3.29.2"
     scripts:
@@ -23,14 +23,17 @@ workflows:
           flutter pub get
           flutter pub cache repair
 
-      - name: إعداد iOS
+      - name: إعداد iOS وتثبيت CocoaPods
         script: |
           cd ios
+          # لو مش موجود Podfile، ننشئ واحد جديد بدون توقيع
+          if [ ! -f "Podfile" ]; then
+            echo "No Podfile found. Generating one using flutter build ios..."
+            flutter build ios --no-codesign
+          fi
           pod deintegrate
           rm -rf Pods Podfile.lock
-
-      - name: تثبيت CocoaPods
-        script: |
+          # تثبيت CocoaPods
           sudo gem install cocoapods
           pod repo update
           pod install --repo-update --verbose
