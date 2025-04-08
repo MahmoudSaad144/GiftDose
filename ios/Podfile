@@ -2,16 +2,15 @@ platform :ios, '13.0'
 
 target 'Runner' do
   use_frameworks!
-
-  # التبعيات المشتركة
+  pod 'connectivity_plus', :path => '../.symlinks/plugins/connectivity_plus/ios' # تأكد من وجود "../"
+  
+  # باقي التبعيات
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
   pod 'GoogleMaps'
   pod 'GooglePlaces'
-  
-  # أضف هذه السطر بدلاً من pod 'connectivity_plus'
-  pod 'connectivity_plus', :path => '../.symlinks/plugins/connectivity_plus/ios'
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
