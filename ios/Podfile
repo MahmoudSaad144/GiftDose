@@ -1,4 +1,4 @@
-platform :ios, '13.0'
+platform :ios, '14.0'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
@@ -8,7 +8,6 @@ project 'Runner', {
   'Release' => :release,
 }
 
-# دالة للحصول على مسار FLUTTER_ROOT
 def flutter_root
   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
   unless File.exist?(generated_xcode_build_settings_path)
@@ -22,17 +21,14 @@ def flutter_root
   raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}."
 end
 
-# تضمين مساعد Flutter
 require File.expand_path(File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper.rb'), __dir__)
 
 use_frameworks!
 use_modular_headers!
 
 target 'Runner' do
-  # تثبيت كل البلجنز الخاصة بفلتر
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  # تبعيات إضافية
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
@@ -47,9 +43,8 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
     end
   end
 end
