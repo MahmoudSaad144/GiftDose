@@ -9,12 +9,7 @@ target 'Runner' do
   pod 'Firebase/Analytics'
   pod 'GoogleMaps'
   pod 'GooglePlaces'
-  pod 'connectivity_plus'
-
-  # التبعيات الخاصة بكل فلافر
-  if ENV['FLAVOR'] == 'dev'
-    # التبعيات الخاصة بفلافر التطوير
-  elsif ENV['FLAVOR'] == 'prod'
-    # التبعيات الخاصة بفلافر الإنتاج
-  end
+  
+  # أضف هذه السطر بدلاً من pod 'connectivity_plus'
+  pod 'connectivity_plus', :path => '.symlinks/plugins/connectivity_plus/ios'
 end
