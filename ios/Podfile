@@ -1,11 +1,10 @@
 platform :ios, '13.0'
 
 target 'Runner' do
-  use_frameworks! :linkage => :static
+  use_frameworks!
+  pod 'connectivity_plus', :path => 'Flutter/plugins/connectivity_plus/ios'
   
-  # استخدم المسار المطلق الصحيح
-  pod 'connectivity_plus', :path => File.join('..', '.symlinks', 'plugins', 'connectivity_plus', 'ios')
-  
+  # باقي التبعيات
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
@@ -16,13 +15,7 @@ target 'Runner' do
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-        config.build_settings['OTHER_LDFLAGS'] = '$(inherited) -framework "Flutter"'
-        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
-        config.build_settings['DEFINES_MODULE'] = 'YES' # أضف هذا السطر
       end
-    end
-    installer.pods_project.build_configurations.each do |config|
-      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
     end
   end
 end
