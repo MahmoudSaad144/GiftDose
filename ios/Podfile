@@ -9,7 +9,7 @@ target 'Runner' do
   pod 'Firebase/Analytics'
   pod 'GoogleMaps'          # Add Google Maps dependency if needed
   pod 'GooglePlaces'        # Add Google Places dependency if needed
-
+  pod 'connectivity_plus'
   # Add any additional pods if required
 end
 
