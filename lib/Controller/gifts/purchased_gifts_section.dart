@@ -128,7 +128,7 @@ class _PurchasedGiftsSectionState extends State<PurchasedGiftsSection> {
       };
 
       final response = await _api.getrequst(
-        "https://newbrainse.dev-swift.com/api/cancelgift/$idgift ",
+        "https://giftdose.com/api/cancelgift/$idgift ",
         _loadLimit.toString(),
         headers: headers,
       );

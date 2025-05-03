@@ -85,9 +85,7 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
       };
 
       final response = await _api.postRequest(
-          "https://newbrainse.dev-swift.com/api/updategifts/$giftId",
-          body,
-          headers);
+          "https://giftdose.com/api/updategifts/$giftId", body, headers);
 
       if (response != null) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -165,7 +163,7 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
       };
 
       final response = await _api.getrequst(
-        "https://newbrainse.dev-swift.com/api/Deletegifts/$idgift",
+        "https://giftdose.com/api/Deletegifts/$idgift",
         _loadLimit.toString(),
         headers: headers,
       );

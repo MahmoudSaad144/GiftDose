@@ -430,7 +430,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
       };
 
       final response = await _api.getrequst(
-        "https://newbrainse.dev-swift.com/api/cancelgift/$giftid ",
+        "https://giftdose.com/api/cancelgift/$giftid ",
         "",
         headers: headers,
       );

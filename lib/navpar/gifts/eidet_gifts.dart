@@ -145,8 +145,8 @@ class EidetGiftController extends GetxController {
       "Authorization": "Bearer $token",
     };
 
-    var request = http.MultipartRequest("POST",
-        Uri.parse("https://newbrainse.dev-swift.com/api/updategifts/$giftId"))
+    var request = http.MultipartRequest(
+        "POST", Uri.parse("https://giftdose.com/api/updategifts/$giftId"))
       ..headers.addAll(headers)
       ..fields["name"] = nameController.text
       ..fields["size"] = sizeController.text

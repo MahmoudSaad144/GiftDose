@@ -1,4 +1,4 @@
-const String linkservername = "https://newbrainse.dev-swift.com";
+const String linkservername = "https://giftdose.com";
 
 const String linklogin = "$linkservername/api/accesstoken";
 const String linklongout = "$linkservername/api/logout";

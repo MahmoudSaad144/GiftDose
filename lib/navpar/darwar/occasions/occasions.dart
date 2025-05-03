@@ -121,7 +121,7 @@ class _OccasionsState extends State<Occasions> {
       };
 
       final response = await _api.postRequest(
-        "https://newbrainse.dev-swift.com/api/updateoccasion/$occasionId",
+        "https://giftdose.com/api/updateoccasion/$occasionId",
         body,
         headers,
       );
@@ -170,7 +170,7 @@ class _OccasionsState extends State<Occasions> {
       };
 
       final response = await _api.getrequst(
-        "https://newbrainse.dev-swift.com/api/Deleteoccasion/$occasionId",
+        "https://giftdose.com/api/Deleteoccasion/$occasionId",
         _loadLimit.toString(),
         headers: headers,
       );
