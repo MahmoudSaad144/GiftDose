@@ -347,24 +347,23 @@ class AddGiftPage extends GetView<GiftController> {
   Widget _buildExceptionButton() {
     return Row(
       children: [
-        Container(
-          width: 350,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: const Color.fromARGB(159, 219, 222, 223)),
-          child: MaterialButton(
-            onPressed: () => Get.to(() => Exceptionspage()),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    Text('Hide the gift'.tr, style: TextStyle(fontSize: 18)),
-                    SizedBox(
-                      width: 180,
-                    ),
-                    Icon(Icons.visibility_off)
-                  ],
-                )),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: const Color.fromARGB(159, 219, 222, 223)),
+            child: MaterialButton(
+              onPressed: () => Get.to(() => Exceptionspage()),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Hide the gift'.tr, style: TextStyle(fontSize: 18)),
+                      Icon(Icons.visibility_off)
+                    ],
+                  )),
+            ),
           ),
         ),
       ],

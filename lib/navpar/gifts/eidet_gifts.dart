@@ -390,34 +390,33 @@ class EidetGifts extends GetView<EidetGiftController> {
   Widget _buildExceptionButton() {
     return Row(
       children: [
-        Container(
-          width: 350,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: const Color.fromARGB(159, 219, 222, 223)),
-          child: MaterialButton(
-            onPressed: () async {
-              final updatedFriends = await Get.to(() => Exceptionspage2(),
-                  arguments: {"giftId": controller.giftId});
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: const Color.fromARGB(159, 219, 222, 223)),
+            child: MaterialButton(
+              onPressed: () async {
+                final updatedFriends = await Get.to(() => Exceptionspage2(),
+                    arguments: {"giftId": controller.giftId});
 
-              if (updatedFriends != null) {
-                controller.selectedFriends2.clear();
-                controller.selectedFriends2.addAll(updatedFriends);
-                controller.selectedFriendIds =
-                    List.from(updatedFriends); // ✅ حفظ القيم الجديدة
-              }
-            },
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    Text('Hide the gift'.tr, style: TextStyle(fontSize: 18)),
-                    SizedBox(
-                      width: 180,
-                    ),
-                    Icon(Icons.visibility_off)
-                  ],
-                )),
+                if (updatedFriends != null) {
+                  controller.selectedFriends2.clear();
+                  controller.selectedFriends2.addAll(updatedFriends);
+                  controller.selectedFriendIds =
+                      List.from(updatedFriends); // ✅ حفظ القيم الجديدة
+                }
+              },
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Hide the gift'.tr, style: TextStyle(fontSize: 18)),
+                      Icon(Icons.visibility_off)
+                    ],
+                  )),
+            ),
           ),
         ),
       ],
