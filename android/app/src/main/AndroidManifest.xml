@@ -30,7 +30,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB1aKJp3HqKWfbnuRfKLV8k1ZX2F-O80us"/> <!-- استبدل بمفتاحك الحقيقي -->
+            android:value="AIzaSyCE8Z_S9GkPrz0_cvEHSF2j_UMIUiJgud8"/> <!-- استبدل بمفتاحك الحقيقي -->
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

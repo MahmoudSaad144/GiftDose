@@ -32,7 +32,32 @@ class EidetGiftController extends GetxController {
   late int giftId;
   List<int> hiddenUserIds = [];
   final RxBool _isLoading = false.obs;
-  final currencies = ['USD', 'EUR', 'EGP', 'SAR', 'AED'];
+  final currencies = [
+    'USD', // الدولار الأمريكي
+    'EUR', // اليورو
+    'GBP', // الجنيه الإسترليني
+    'EGP', // الجنيه المصري
+    'SAR', // الريال السعودي
+    'AED', // الدرهم الإماراتي
+    'KWD', // الدينار الكويتي
+    'QAR', // الريال القطري
+    'BHD', // الدينار البحريني
+    'OMR', // الريال العماني
+    'JOD', // الدينار الأردني
+    'LBP', // الليرة اللبنانية
+    'SYP', // الليرة السورية
+    'DZD', // الدينار الجزائري
+    'TND', // الدينار التونسي
+    'MAD', // الدرهم المغربي
+    'LYD', // الدينار الليبي
+    'SDG', // الجنيه السوداني
+    'YER', // الريال اليمني
+    'IQD', // الدينار العراقي
+    'SOS', // الشلن الصومالي
+    'MRU', // الأوقية الموريتانية
+    'DJF', // الفرنك الجيبوتي
+    'TRY', // الليرة التركية
+  ];
 
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();

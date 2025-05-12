@@ -84,8 +84,8 @@ class ApiService {
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {
         Get.snackbar(
-          "خطأ",
-          responseData["message"] ?? "استجابة غير متوقعة",
+          "",
+          responseData["errors"] ?? "استجابة غير متوقعة",
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );

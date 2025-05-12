@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:dio/dio.dart' as dio;
 
 const String googleApiKey =
-    "AIzaSyB1aKJp3HqKWfbnuRfKLV8k1ZX2F-O80us"; // ضع مفتاح Google API هنا
+    "AIzaSyCE8Z_S9GkPrz0_cvEHSF2j_UMIUiJgud8"; // ضع مفتاح Google API هنا
 
 class MapSelectionScreen extends StatefulWidget {
   final Function(double lat, double lng, String address, String placeId,

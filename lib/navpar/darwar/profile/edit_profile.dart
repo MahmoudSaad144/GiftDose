@@ -100,9 +100,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
             'location': locationController.text,
             'username': usernameController.text,
           });
-        } else {
-          Get.snackbar("", responseData["message"] ?? "حدث خطأ أثناء التحديث",
-              backgroundColor: Colors.red, colorText: Colors.white);
         }
       } catch (e) {
         Get.snackbar("خطأ", "فشل الاتصال بالخادم: $e",

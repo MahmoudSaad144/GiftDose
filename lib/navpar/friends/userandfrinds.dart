@@ -70,26 +70,25 @@ class _UserAndFriendsPageState extends State<UserAndFriendsPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(
-          width: 400,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: const Color.fromARGB(159, 219, 222, 223)),
-          child: MaterialButton(
-            onPressed: () => Get.to(() => ConnectWithContacts()),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Connect with Contacts'.tr,
-                    style: TextStyle(fontSize: 18)),
-                SizedBox(
-                  width: 230,
-                ),
-                Icon(
-                  Icons.arrow_circle_right,
-                  size: 30,
-                )
-              ],
+        Expanded(
+          child: Container(
+            width: 400,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: const Color.fromARGB(159, 219, 222, 223)),
+            child: MaterialButton(
+              onPressed: () => Get.to(() => ConnectWithContacts()),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Connect with Contacts'.tr,
+                      style: TextStyle(fontSize: 18)),
+                  Icon(
+                    Icons.arrow_circle_right,
+                    size: 30,
+                  )
+                ],
+              ),
             ),
           ),
         ),
