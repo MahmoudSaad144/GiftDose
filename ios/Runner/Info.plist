@@ -2,29 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>نحتاج إلى الوصول إلى مكتبة الصور لاختيار صورة للهدية.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>نحتاج إلى الوصول إلى الكاميرا لالتقاط صورة للهدية.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>نحتاج إلى الميكروفون للتسجيل الصوتي (في حال تم استخدامه).</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to let you choose the perfect gift image.</string>
 
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera so you can take a photo for your gift.</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your microphone to enable voice recordings when used.</string>
+
 	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>نحتاج إلى إذن للوصول إلى موقعك من أجل تحسين تجربتك</string>
+	<string>We use your location to provide personalized experiences while using the app.</string>
 
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>نحتاج إلى إذن للوصول إلى موقعك حتى عندما يكون التطبيق في الخلفية</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We use your location in the background to enhance app functionality and offer better suggestions.</string>
 
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>يُستخدم موقعك لتوفير خدمات مخصصة</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location access at all times to ensure the app works properly and delivers relevant features.</string>
 
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>نحتاج إلى موقعك حتى يعمل التطبيق بشكل صحيح</string>
-
-
-	
+	<key>NSContactsUsageDescription</key>
+	<string>We may access your contacts to personalize your experience and help you share gifts with your loved ones.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Flutter Application 5</string>
 	<key>CFBundleExecutable</key>
