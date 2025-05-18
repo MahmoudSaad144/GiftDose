@@ -23,7 +23,7 @@
 	<key>NSContactsUsageDescription</key>
 	<string>We may access your contacts to personalize your experience and help you share gifts with your loved ones.</string>
 	<key>CFBundleDisplayName</key>
-	<string>Flutter Application 5</string>
+	<string>Gift Dose</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
