@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1019536744918",
-    "project_id": "giftdose-60f12",
-    "storage_bucket": "giftdose-60f12.firebasestorage.app"
+    "project_number": "883279588390",
+    "project_id": "giftdose-8d4ba",
+    "storage_bucket": "giftdose-8d4ba.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1019536744918:android:8bc99087de0b4b60018477",
+        "mobilesdk_app_id": "1:883279588390:android:3490e26e72a30bfd210ae7",
         "android_client_info": {
-          "package_name": "com.example.giftdose"
+          "package_name": "com.solinz.giftdose"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC6RlF8IEpJJhCVdhoBcQx7lThO5e2GjNk"
+          "current_key": "AIzaSyD8OpmU4G7-tpGjeeAm2euNcIA0mkMHE9g"
         }
       ],
       "services": {

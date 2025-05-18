@@ -48,20 +48,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC6RlF8IEpJJhCVdhoBcQx7lThO5e2GjNk',
-    appId: '1:1019536744918:android:8bc99087de0b4b60018477',
-    messagingSenderId: '1019536744918',
-    projectId: 'giftdose-60f12',
-    storageBucket: 'giftdose-60f12.firebasestorage.app',
+    apiKey: 'AIzaSyD8OpmU4G7-tpGjeeAm2euNcIA0mkMHE9g',
+    appId: '1:883279588390:android:3490e26e72a30bfd210ae7',
+    messagingSenderId: '883279588390',
+    projectId: 'giftdose-8d4ba',
+    storageBucket: 'giftdose-8d4ba.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDFbH3hoTboP6kTp2ZbI5kq5eCaSo0-YBA',
-    appId: '1:1019536744918:ios:dd798a29e9ea8b7e018477',
-    messagingSenderId: '1019536744918',
-    projectId: 'giftdose-60f12',
-    storageBucket: 'giftdose-60f12.firebasestorage.app',
-    iosBundleId: 'com.example.flutterApplication5',
+    apiKey: 'AIzaSyACW4_Y5FwpGI_7lMY2mpNFEs1FDtrTPtE',
+    appId: '1:883279588390:ios:65aad412c6f194dc210ae7',
+    messagingSenderId: '883279588390',
+    projectId: 'giftdose-8d4ba',
+    storageBucket: 'giftdose-8d4ba.firebasestorage.app',
+    iosBundleId: 'com.solinz.giftdose',
   );
 
 }

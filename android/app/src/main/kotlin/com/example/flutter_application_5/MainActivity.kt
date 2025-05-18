@@ -1,4 +1,4 @@
-package com.example.giftdose
+package com.solinz.giftdose
 
 import android.database.Cursor
 import android.provider.ContactsContract
