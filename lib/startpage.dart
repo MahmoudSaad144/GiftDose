@@ -116,8 +116,12 @@ class _StartPageState extends State<StartPage> {
                             AnimatedOpacity(
                               duration: const Duration(milliseconds: 500),
                               opacity: opacity3,
-                              child: Icon(Icons.star,
-                                  size: 50, color: Colors.white),
+                              child: Image.asset(
+                                "images/logo.png",
+                                height: height * 0.1,
+                                width: height * 0.1,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             AnimatedOpacity(
                               duration: const Duration(milliseconds: 500),
