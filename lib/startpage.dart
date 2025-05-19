@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:giftdose/Controller/token.dart';
 import 'package:flutter/material.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:get/get.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -17,18 +15,12 @@ class _StartPageState extends State<StartPage> {
   double opacity3 = 0;
   double opacity4 = 0;
   double space = 0;
-  double bottomPadding = 0;
+  double bottomPadding = 0; // للتحكم في حركة الجملة للأعلى
 
   Future<void> _checkLoginStatus() async {
-    // التأكد من الاتصال بالإنترنت أولًا
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      // لا يوجد إنترنت، الانتقال لصفحة عدم الاتصال
-      Get.offNamed('/no-internet');
-    } else {
-      // يوجد إنترنت، التحقق من حالة الدخول
+    Future.delayed(Duration(seconds: 2), () {
       TokenService.checkAuthStatus();
-    }
+    });
   }
 
   @override
@@ -48,15 +40,17 @@ class _StartPageState extends State<StartPage> {
     Timer(const Duration(milliseconds: 2000), () {
       setState(() {
         opacity3 = 1;
-        bottomPadding = 20;
+        bottomPadding = 20; // تحريك الجملة للأعلى بشكل ناعم
       });
     });
     Timer(const Duration(milliseconds: 2000), () {
       setState(() => opacity4 = 1);
     });
 
-    // بعد انتهاء الانيميشن، تحقق من حالة الدخول أو الإنترنت
-    Timer(const Duration(seconds: 6), _checkLoginStatus);
+    // بعد 6 ثواني، تحقق من حالة تسجيل الدخول
+    Timer(const Duration(seconds: 6), () {
+      _checkLoginStatus();
+    });
   }
 
   @override
@@ -104,11 +98,11 @@ class _StartPageState extends State<StartPage> {
                               opacity: opacity1,
                               child: FittedBox(
                                 child: Text(
-                                  'Gift',
+                                  "Gift",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: width * 0.12,
-                                    fontFamily: 'Caveat',
+                                    fontFamily: "Caveat",
                                     color: Colors.blue,
                                   ),
                                 ),
@@ -123,7 +117,7 @@ class _StartPageState extends State<StartPage> {
                               duration: const Duration(milliseconds: 500),
                               opacity: opacity3,
                               child: Image.asset(
-                                'images/logo.png',
+                                "images/logo.png",
                                 height: height * 0.1,
                                 width: height * 0.1,
                                 fit: BoxFit.cover,
@@ -139,11 +133,11 @@ class _StartPageState extends State<StartPage> {
                               opacity: opacity2,
                               child: FittedBox(
                                 child: Text(
-                                  'Dose',
+                                  "Dose",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: width * 0.12,
-                                    fontFamily: 'Caveat',
+                                    fontFamily: "Caveat",
                                     color: Colors.blue,
                                   ),
                                 ),
@@ -157,7 +151,7 @@ class _StartPageState extends State<StartPage> {
 
                   // الجملة أسفل الشاشة بتأثير جمالي
                   Positioned(
-                    bottom: height * 0.37,
+                    bottom: height * 0.37, // يجعلها قريبة من الحافة السفلية
                     left: 0,
                     right: 0,
                     child: AnimatedOpacity(
@@ -168,18 +162,18 @@ class _StartPageState extends State<StartPage> {
                         padding: EdgeInsets.only(bottom: bottomPadding),
                         child: Center(
                           child: Text(
-                            'Dose of happiness',
+                            "Dose of happiness",
                             style: TextStyle(
                               fontSize: width * 0.08,
                               fontWeight: FontWeight.w600,
-                              fontFamily: 'Caveat',
+                              fontFamily: "Caveat",
                               color: Colors.white,
                               shadows: [
                                 Shadow(
                                   blurRadius: 10,
                                   color: Colors.black.withOpacity(0.5),
                                   offset: const Offset(3, 3),
-                                ),
+                                )
                               ],
                             ),
                             textAlign: TextAlign.center,

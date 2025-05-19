@@ -1,38 +1,84 @@
 workflows:
-  build_ios:
-    name: Build iOS with Flutter 3.29.2
-    max_build_duration: 60
+  ios-testflight:
+    name: iOS TestFlight Build & Publish
     environment:
-      flutter: "3.29.2"
+      flutter: stable
       xcode: latest
-      cocoapods: default
+      vars:
+        FLUTTER_BUILD_MODE: release
+
+    code_signing:
+      ios:
+        automatic_signing: true
+        provisioning_profile_type: app-store
+        certificate: "KPF64GPH8P"
+        bundle_identifier: "com.solinz.giftdose"
+
     scripts:
-      - name: تنظيف المشروع
+      - name: Clean project
         script: |
           flutter clean
           rm -rf ios/Pods ios/Podfile.lock ios/Runner.xcworkspace
 
-      - name: تثبيت الحزم
-        script: |
-          flutter pub get
+      - name: Get Flutter packages
+        script: flutter pub get
 
-      - name: إعداد iOS وتثبيت CocoaPods
+      - name: Copy GoogleService-Info.plist
+        script: |
+          cp ios/Runner/GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
+
+      - name: Remove conflicting storyboard key
+        script: |
+          /usr/libexec/PlistBuddy -c "Delete :UIMainStoryboardFile" ios/Runner/Info.plist || echo "Key not found, skipping"
+
+      - name: Install CocoaPods
         script: |
           cd ios
           pod install --repo-update --verbose
           cd ..
 
-      - name: بناء تطبيق iOS
+      - name: Flutter build iOS
         script: |
           flutter build ios --release --no-codesign
 
-      - name: توليد ملف IPA يدويًا
+      - name: Archive .xcarchive
         script: |
-          mkdir -p build/ios/ipa/Payload
-          cp -r build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
-          cd build/ios/ipa
-          zip -r Runner.ipa Payload
-          cd ../../../
+          xcodebuild -workspace ios/Runner.xcworkspace \
+                     -scheme Runner \
+                     -configuration Release \
+                     -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
+                     archive
+
+      - name: Generate ExportOptions.plist
+        script: |
+          cat > ios/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+            "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+            <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+            </dict>
+          </plist>
+          EOF
+
+      - name: Export .ipa
+        script: |
+          xcodebuild -exportArchive \
+                     -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
+                     -exportOptionsPlist ios/ExportOptions.plist \
+                     -exportPath $CM_BUILD_DIR/ipa_output
 
     artifacts:
-      - build/ios/ipa/Runner.ipa
+      - ipa_output/*.ipa
+
+    publishing:
+      testflight:
+        enabled: true
+        api_key: "KPF64GPH8P"
+        submit_to_testflight: true

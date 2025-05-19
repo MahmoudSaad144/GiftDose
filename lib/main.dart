@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      initialRoute: "/",
+      initialRoute: widget.hasInternet ? "/" : "/no-internet",
       getPages: [
         GetPage(name: "/", page: () => StartPage()),
         GetPage(name: "/no-internet", page: () => NoInternetPage()),
