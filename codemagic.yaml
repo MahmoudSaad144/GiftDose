@@ -29,6 +29,7 @@ workflows:
 
       - name: Remove conflicting storyboard key
         script: |
+          # نحذف UIMainStoryboardFile عشان Flutter يستخدم بس LaunchScreen.storyboard ويتجنب الشاشة البيضا
           /usr/libexec/PlistBuddy -c "Delete :UIMainStoryboardFile" ios/Runner/Info.plist || echo "Key not found, skipping"
 
       - name: Install CocoaPods
@@ -37,47 +38,14 @@ workflows:
           pod install --repo-update --verbose
           cd ..
 
-      - name: Flutter build iOS
+      - name: Build & sign IPA
         script: |
-          flutter build ios --release --no-codesign
-
-      - name: Archive .xcarchive
-        script: |
-          xcodebuild \
-            -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
-            -allowProvisioningUpdates \
-            archive
-
-      - name: Generate ExportOptions.plist
-        script: |
-          cat > ios/ExportOptions.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-            "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-            <dict>
-              <key>method</key>
-              <string>app-store</string>
-              <key>uploadBitcode</key>
-              <false/>
-              <key>uploadSymbols</key>
-              <true/>
-            </dict>
-          </plist>
-          EOF
-
-      - name: Export .ipa
-        script: |
-          xcodebuild \
-            -exportArchive \
-            -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
-            -exportOptionsPlist ios/ExportOptions.plist \
-            -exportPath $CM_BUILD_DIR/ipa_output \
-            -allowProvisioningUpdates
+          # يبني ويسيّج الـ IPA دفعة واحدة باستخدام التوقيع الآلي اللي ضبطته في UI (App Store Connect API key)
+          flutter build ipa \
+            --export-method app-store \
+            --no-codesign=false \
+            --build-name=$FLUTTER_BUILD_NAME \
+            --build-number=$FLUTTER_BUILD_NUMBER
 
     artifacts:
-      - ipa_output/*.ipa
+      - build/ios/ipa/*.ipa
