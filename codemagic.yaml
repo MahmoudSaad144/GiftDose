@@ -1,19 +1,15 @@
 workflows:
   ios-testflight:
     name: iOS TestFlight Build & Publish
+    max_build_duration: 60
+
     environment:
       flutter: stable
       xcode: latest
       vars:
         FLUTTER_BUILD_MODE: release
 
-    code_signing:
-      ios:
-        automatic_signing: true
-        provisioning_profile_type: app-store
-        certificate: "KPF64GPH8P"
-        bundle_identifier: "com.solinz.giftdose"
-
+    # 1. سكربتات البناء
     scripts:
       - name: Clean project
         script: |
@@ -25,10 +21,12 @@ workflows:
 
       - name: Copy GoogleService-Info.plist
         script: |
+          # تأكد إن الملف موجود في المستودع تحت ios/Runner/
           cp ios/Runner/GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
 
       - name: Remove conflicting storyboard key
         script: |
+          # نحذف UIMainStoryboardFile عشان Flutter يستخدم فقط LaunchScreen.storyboard
           /usr/libexec/PlistBuddy -c "Delete :UIMainStoryboardFile" ios/Runner/Info.plist || echo "Key not found, skipping"
 
       - name: Install CocoaPods
@@ -74,11 +72,6 @@ workflows:
                      -exportOptionsPlist ios/ExportOptions.plist \
                      -exportPath $CM_BUILD_DIR/ipa_output
 
+    # 2. تعرّف الـ Artifact عشان تخرّج الـ .ipa وتراها في CI
     artifacts:
       - ipa_output/*.ipa
-
-    publishing:
-      testflight:
-        enabled: true
-        api_key: "KPF64GPH8P"
-        submit_to_testflight: true
