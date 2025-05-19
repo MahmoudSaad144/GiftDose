@@ -1,51 +1,38 @@
 workflows:
-  ios-testflight:
-    name: iOS TestFlight Build & Publish
+  build_ios:
+    name: Build iOS with Flutter 3.29.2
     max_build_duration: 60
-
     environment:
-      flutter: stable
+      flutter: "3.29.2"
       xcode: latest
-      vars:
-        FLUTTER_BUILD_MODE: release
-
+      cocoapods: default
     scripts:
-      - name: Clean project
+      - name: تنظيف المشروع
         script: |
           flutter clean
           rm -rf ios/Pods ios/Podfile.lock ios/Runner.xcworkspace
 
-      - name: Get Flutter packages
-        script: flutter pub get
-
-      - name: Copy GoogleService-Info.plist if needed
+      - name: تثبيت الحزم
         script: |
-          if [ -f ios/Runner/GoogleService-Info.plist ]; then
-            echo "GoogleService-Info.plist already exists, skipping copy."
-          else
-            echo "Copying GoogleService-Info.plist into ios/Runner..."
-            cp GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
-          fi
+          flutter pub get
 
-      - name: Remove conflicting storyboard key
-        script: |
-          # نحذف UIMainStoryboardFile عشان Flutter يستخدم بس LaunchScreen.storyboard ويتجنب الشاشة البيضا
-          /usr/libexec/PlistBuddy -c "Delete :UIMainStoryboardFile" ios/Runner/Info.plist || echo "Key not found, skipping"
-
-      - name: Install CocoaPods
+      - name: إعداد iOS وتثبيت CocoaPods
         script: |
           cd ios
           pod install --repo-update --verbose
           cd ..
 
-      - name: Build & sign IPA
+      - name: بناء تطبيق iOS
         script: |
-          # يبني ويسيّج الـ IPA دفعة واحدة باستخدام التوقيع الآلي اللي ضبطته في UI (App Store Connect API key)
-          flutter build ipa \
-            --export-method app-store \
-            --no-codesign=false \
-            --build-name=$FLUTTER_BUILD_NAME \
-            --build-number=$FLUTTER_BUILD_NUMBER
+          flutter build ios --release --no-codesign
+
+      - name: توليد ملف IPA يدويًا
+        script: |
+          mkdir -p build/ios/ipa/Payload
+          cp -r build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
+          cd build/ios/ipa
+          zip -r Runner.ipa Payload
+          cd ../../../
 
     artifacts:
-      - build/ios/ipa/*.ipa
+      - build/ios/ipa/Runner.ipa

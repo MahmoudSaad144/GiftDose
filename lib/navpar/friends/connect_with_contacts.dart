@@ -4,7 +4,7 @@ import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/navpar/message/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/Controller/token.dart';
 
@@ -49,19 +49,19 @@ class _ConnectWithContactsState extends State<ConnectWithContacts> {
       page++;
     }
 
-    // if (await FlutterContacts.requestPermission()) {
-    //   List<Contact> contacts =
-    //       await FlutterContacts.getContacts(withProperties: true);
-    //   List<String> contactNumbers = contacts
-    //       .expand((contact) => contact.phones
-    //           .map((phone) => phone.number.replaceAll(RegExp(r'\D'), '')))
-    //       .where((number) => number.isNotEmpty)
-    //       .toList();
+    if (await FlutterContacts.requestPermission()) {
+      List<Contact> contacts =
+          await FlutterContacts.getContacts(withProperties: true);
+      List<String> contactNumbers = contacts
+          .expand((contact) => contact.phones
+              .map((phone) => phone.number.replaceAll(RegExp(r'\D'), '')))
+          .where((number) => number.isNotEmpty)
+          .toList();
 
-    //   if (contactNumbers.isNotEmpty) {
-    //     await _sendContactsToAPI(contactNumbers);
-    //   }
-    // }
+      if (contactNumbers.isNotEmpty) {
+        await _sendContactsToAPI(contactNumbers);
+      }
+    }
 
     isLoading.value = false;
     _isFetching = false;
