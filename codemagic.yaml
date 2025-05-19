@@ -9,7 +9,6 @@ workflows:
       vars:
         FLUTTER_BUILD_MODE: release
 
-    # 1. سكربتات البناء
     scripts:
       - name: Clean project
         script: |
@@ -19,14 +18,18 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
 
-      - name: Copy GoogleService-Info.plist
+      - name: Copy GoogleService-Info.plist if needed
         script: |
-          # تأكد إن الملف موجود في المستودع تحت ios/Runner/
-          cp ios/Runner/GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
+          # لو مش موجود في المسار، انسخه؛ وإلا خلي العملية تمضي
+          if [ -f ios/Runner/GoogleService-Info.plist ]; then
+            echo "GoogleService-Info.plist already exists, skipping copy."
+          else
+            echo "Copying GoogleService-Info.plist into ios/Runner..."
+            cp GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
+          fi
 
       - name: Remove conflicting storyboard key
         script: |
-          # نحذف UIMainStoryboardFile عشان Flutter يستخدم فقط LaunchScreen.storyboard
           /usr/libexec/PlistBuddy -c "Delete :UIMainStoryboardFile" ios/Runner/Info.plist || echo "Key not found, skipping"
 
       - name: Install CocoaPods
@@ -72,6 +75,5 @@ workflows:
                      -exportOptionsPlist ios/ExportOptions.plist \
                      -exportPath $CM_BUILD_DIR/ipa_output
 
-    # 2. تعرّف الـ Artifact عشان تخرّج الـ .ipa وتراها في CI
     artifacts:
       - ipa_output/*.ipa
