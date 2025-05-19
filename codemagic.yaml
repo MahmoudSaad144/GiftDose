@@ -20,7 +20,6 @@ workflows:
 
       - name: Copy GoogleService-Info.plist if needed
         script: |
-          # لو مش موجود في المسار، انسخه؛ وإلا خلي العملية تمضي
           if [ -f ios/Runner/GoogleService-Info.plist ]; then
             echo "GoogleService-Info.plist already exists, skipping copy."
           else
@@ -44,11 +43,14 @@ workflows:
 
       - name: Archive .xcarchive
         script: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-                     -scheme Runner \
-                     -configuration Release \
-                     -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
-                     archive
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
+            -allowProvisioningUpdates \
+            archive
 
       - name: Generate ExportOptions.plist
         script: |
@@ -70,10 +72,12 @@ workflows:
 
       - name: Export .ipa
         script: |
-          xcodebuild -exportArchive \
-                     -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
-                     -exportOptionsPlist ios/ExportOptions.plist \
-                     -exportPath $CM_BUILD_DIR/ipa_output
+          xcodebuild \
+            -exportArchive \
+            -archivePath $CM_BUILD_DIR/ios_archive/Runner.xcarchive \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportPath $CM_BUILD_DIR/ipa_output \
+            -allowProvisioningUpdates
 
     artifacts:
       - ipa_output/*.ipa
