@@ -7,7 +7,7 @@ import 'package:giftdose/fanction/mypintnput.dart';
 import 'package:giftdose/navpar/darwar/profile/profile.dart';
 import 'package:giftdose/translation/language_service.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -36,8 +36,8 @@ class _SinguppageState extends State<Singuppage> {
   bool showWorldWide = true;
 
   Future<String?> getFCMToken() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    return await messaging.getToken();
+    // FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // return await messaging.getToken();
   }
 
   Future<void> opt() async {
