@@ -12,14 +12,14 @@ import 'package:giftdose/startpage.dart';
 import 'package:giftdose/translation/language_service.dart';
 import 'package:giftdose/translation/translation_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -27,7 +27,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   bool hasInternet = await checkInternetConnection();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   Get.put(ProfileController());
   await setupNotifications();
 
@@ -101,7 +101,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: "/5", page: () => ProfilePage()),
         GetPage(name: "/6", page: () => AddOccasions()),
         GetPage(name: "/7", page: () => Occasions()),
-        // GetPage(name: "/8", page: () => SettingsPage()),
+        GetPage(name: "/8", page: () => SettingsPage()),
         GetPage(name: "/10", page: () => UserAndFriendsPage()),
       ],
       builder: (context, child) {
@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 Future<void> setupNotifications() async {
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   // إنشاء قناة الإشعارات
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -140,51 +140,51 @@ Future<void> setupNotifications() async {
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
-  // await messaging.requestPermission(
-  //   alert: true,
-  //   badge: true,
-  //   sound: true,
-  // );
-  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   RemoteNotification? notification = message.notification;
-  //   if (notification != null) {
-  //     Get.find<ProfileController>().getData();
-  //   }
-  // });
+  await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    if (notification != null) {
+      Get.find<ProfileController>().getData();
+    }
+  });
 }
 
 myrequestpermission() async {
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   // طلب إذن الإشعارات
-  // NotificationSettings settings = await messaging.requestPermission(
-  //   alert: true,
-  //   announcement: false,
-  //   badge: true,
-  //   carPlay: false,
-  //   criticalAlert: false,
-  //   provisional: false,
-  //   sound: true,
-  // );
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
 
-  // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  // } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-  //   print('User granted provisional notification permission');
-  // } else {
-  //   print('User declined or has not accepted notification permission');
-  // }
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    print('User granted provisional notification permission');
+  } else {
+    print('User declined or has not accepted notification permission');
+  }
 
   // طلب إذن الكاميرا
-  // PermissionStatus cameraStatus = await Permission.camera.request();
-  // if (cameraStatus.isGranted) {
-  //   print("Camera permission granted");
-  // } else {
-  //   print("Camera permission denied");
-  // }
+  PermissionStatus cameraStatus = await Permission.camera.request();
+  if (cameraStatus.isGranted) {
+    print("Camera permission granted");
+  } else {
+    print("Camera permission denied");
+  }
 
 //   // تحديث الحالة في صفحة الإعدادات بعد طلب الأذونات
-  // updatePermissionStatus(cameraStatus, settings);
+  updatePermissionStatus(cameraStatus, settings);
 }
 
-// void updatePermissionStatus(
-//     PermissionStatus cameraStatus, NotificationSettings settings) {}
+void updatePermissionStatus(
+    PermissionStatus cameraStatus, NotificationSettings settings) {}

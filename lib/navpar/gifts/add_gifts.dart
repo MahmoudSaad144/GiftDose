@@ -284,12 +284,12 @@ class AddGiftPage extends GetView<GiftController> {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: InkWell(
-          // onTap: () => Get.to(() => MapSelectionScreen(
-          //       onLocationSelected: (lat, lng, address, placeId, placeName) {
-          //         controller.updateLocation(
-          //             lat, lng, address, placeId, placeName);
-          //       },
-          //     )),
+          onTap: () => Get.to(() => MapSelectionScreen(
+                onLocationSelected: (lat, lng, address, placeId, placeName) {
+                  controller.updateLocation(
+                      lat, lng, address, placeId, placeName);
+                },
+              )),
           child: Container(
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(

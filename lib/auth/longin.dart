@@ -11,7 +11,7 @@ import 'package:giftdose/translation/language_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:pinput/pinput.dart';
 
@@ -43,10 +43,10 @@ class _LonginpageState extends State<Longinpage> {
     return "Unknown Device";
   }
 
-  // Future<String?> getFCMToken() async {
-  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  //   return await messaging.getToken();
-  // }
+  Future<String?> getFCMToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    return await messaging.getToken();
+  }
 
   Future<void> opt() async {
     if (!formstate.currentState!.validate()) return;
@@ -57,7 +57,7 @@ class _LonginpageState extends State<Longinpage> {
       });
     }
 
-    // String? fcmToken = await getFCMToken();
+    String? fcmToken = await getFCMToken();
     String email = _emailController.text;
     String pin = pinController.text;
     String apiUrl = linkopt;
@@ -70,9 +70,9 @@ class _LonginpageState extends State<Longinpage> {
     Map<String, dynamic> body = {
       "email": email,
       "code": pin,
-      // "fcm_token": fcmToken
+      "fcm_token": fcmToken
     };
-    // print(fcmToken);
+    print(fcmToken);
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -132,7 +132,7 @@ class _LonginpageState extends State<Longinpage> {
 
       try {
         String deviceName = await getDeviceName();
-        // String? fcmToken = await getFCMToken();
+        String? fcmToken = await getFCMToken();
         Locale savedLocale = await LanguageService.getSavedLanguage();
         final response = await http.post(
           Uri.parse(linklogin),
@@ -141,10 +141,10 @@ class _LonginpageState extends State<Longinpage> {
             "login_id": _emailController.text,
             "password": _passwordController.text,
             "device_name": deviceName,
-            // "fcm_token": fcmToken
+            "fcm_token": fcmToken
           }),
         );
-        // print("000000000000$fcmToken");
+        print("000000000000$fcmToken");
         final responseData = jsonDecode(response.body);
         print("Decoded Response: $responseData");
 

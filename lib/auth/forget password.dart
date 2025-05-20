@@ -6,7 +6,7 @@ import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/navpar/darwar/profile/profile.dart';
 import 'package:giftdose/translation/language_service.dart';
 
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
@@ -30,8 +30,8 @@ class _ForgetpasswordpageState extends State<Forgetpasswordpage> {
   bool _isLoading = false;
 
   Future<String?> getFCMToken() async {
-    // FirebaseMessaging messaging = FirebaseMessaging.instance;
-    // return await messaging.getToken();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    return await messaging.getToken();
   }
 
   Future<void> opt() async {
