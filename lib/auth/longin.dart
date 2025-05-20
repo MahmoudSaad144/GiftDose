@@ -341,8 +341,10 @@ class _LonginpageState extends State<Longinpage> {
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: languageTile(25, 15)),
-                            SizedBox(
-                              width: width * .15,
+                            Expanded(
+                              child: SizedBox(
+                                width: width * .15,
+                              ),
                             ),
                             Align(
                               alignment: Alignment.centerRight,

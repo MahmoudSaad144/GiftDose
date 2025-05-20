@@ -19,7 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -101,7 +101,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: "/5", page: () => ProfilePage()),
         GetPage(name: "/6", page: () => AddOccasions()),
         GetPage(name: "/7", page: () => Occasions()),
-        GetPage(name: "/8", page: () => SettingsPage()),
+        // GetPage(name: "/8", page: () => SettingsPage()),
         GetPage(name: "/10", page: () => UserAndFriendsPage()),
       ],
       builder: (context, child) {
@@ -175,12 +175,12 @@ myrequestpermission() async {
   // }
 
   // طلب إذن الكاميرا
-  PermissionStatus cameraStatus = await Permission.camera.request();
-  if (cameraStatus.isGranted) {
-    print("Camera permission granted");
-  } else {
-    print("Camera permission denied");
-  }
+  // PermissionStatus cameraStatus = await Permission.camera.request();
+  // if (cameraStatus.isGranted) {
+  //   print("Camera permission granted");
+  // } else {
+  //   print("Camera permission denied");
+  // }
 
 //   // تحديث الحالة في صفحة الإعدادات بعد طلب الأذونات
   // updatePermissionStatus(cameraStatus, settings);
