@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:giftdose/auth/forget%20password.dart';
 import 'package:giftdose/auth/longin.dart';
 import 'package:giftdose/auth/singup.dart';
@@ -28,37 +26,19 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  bool hasInternet = await checkInternetConnection();
   await Firebase.initializeApp();
+  Get.put(ProfileController());
+  await setupNotifications();
 
-  // Crashlytics: سجل أي خطأ فلاتر غير معالج
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  Locale savedLocale = await LanguageService.getSavedLanguage();
 
-  // حط بقيّة الإعدادات جوّه runZonedGuarded علشان يمسك الأخطاء الأسنكرونية كمان
-  runZonedGuarded<Future<void>>(() async {
-    // فحص النت
-    bool hasInternet = await checkInternetConnection();
-
-    // إعداد الإشعارات
-    await setupNotifications();
-
-    // تسجيل الكنترولر
-    Get.put(ProfileController());
-
-    // استرجاع اللغة المحفوظة
-    Locale savedLocale = await LanguageService.getSavedLanguage();
-
-    // اقفال الدوران
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
-    // تشغيل التطبيق
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp(
       savedLocale: savedLocale,
       hasInternet: hasInternet,
     ));
-  }, (error, stack) {
-    // سجل أي خطأ أسنكروني كـ fatal عند Crashlytics
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
   });
 }
 

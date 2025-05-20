@@ -32,7 +32,6 @@ target 'Runner' do
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
-  pod 'Firebase/Crashlytics'
   pod 'GoogleMaps'
   pod 'GooglePlaces'
 
@@ -42,20 +41,10 @@ target 'Runner' do
 end
 
 post_install do |installer|
-  # Apply Flutter build settings and set deployment target for all pods
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
-    end
-  end
-
-  # Ensure the iOS Runner project also uses the same deployment target
-  installer.aggregate_targets.each do |aggregate|
-    aggregate.user_project.native_targets.each do |native_target|
-      native_target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
-      end
     end
   end
 end
