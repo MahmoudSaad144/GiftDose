@@ -32,6 +32,7 @@ target 'Runner' do
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
+  pod 'Firebase/Crashlytics'
   pod 'GoogleMaps'
   pod 'GooglePlaces'
 
