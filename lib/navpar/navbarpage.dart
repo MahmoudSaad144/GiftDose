@@ -286,105 +286,108 @@ class _NavigationBarState extends State<Navbarpage> {
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: CurvedNavigationBar(
-          height: isLandscape ? height * 0.20 : height * 0.09,
-          color: const Color(0xFFF9EFC7),
-          backgroundColor: Colors.transparent,
-          items: [
-            CurvedNavigationBarItem(
-              child: Icon(
-                Icons.wallet_giftcard_sharp,
-                size: isLandscape ? width * 0.05 : width * 0.09,
-                color: Colors.blue,
-              ),
-              label: 'Gifts'.tr,
+      bottomNavigationBar: CurvedNavigationBar(
+        height: isLandscape ? height * 0.20 : height * 0.1,
+        color: const Color(0xFFF9EFC7),
+        backgroundColor: Colors.transparent,
+        items: [
+          CurvedNavigationBarItem(
+            child: Icon(
+              Icons.wallet_giftcard_sharp,
+              size: isLandscape ? width * 0.05 : width * 0.09,
+              color: Colors.blue,
             ),
-            CurvedNavigationBarItem(
-              child: Icon(
-                Icons.add_reaction_outlined,
-                size: isLandscape ? width * 0.05 : width * 0.09,
-                color: Colors.blue,
-              ),
-              label: "Occasions".tr,
+            label: 'Gifts'.tr,
+            labelStyle: TextStyle(fontSize: width * 0.025)
+          ),
+          CurvedNavigationBarItem(
+            child: Icon(
+              Icons.add_reaction_outlined,
+              size: isLandscape ? width * 0.05 : width * 0.09,
+              color: Colors.blue,
             ),
-            CurvedNavigationBarItem(
-              child: Icon(
-                Icons.supervised_user_circle_sharp,
-                size: isLandscape ? width * 0.05 : width * 0.09,
-                color: Colors.blue,
-              ),
-              label: 'Friends'.tr,
+            label: "Occasions".tr,
+            labelStyle: TextStyle(fontSize: width * 0.025)
+          ),
+          CurvedNavigationBarItem(
+            child: Icon(
+              Icons.supervised_user_circle_sharp,
+              size: isLandscape ? width * 0.05 : width * 0.09,
+              color: Colors.blue,
             ),
-            CurvedNavigationBarItem(
-              child: Obx(() => Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Icon(
-                        Icons.notifications_active,
-                        size: isLandscape ? width * 0.05 : width * 0.09,
-                        color: Colors.blue,
-                      ),
-                      if (controller.notificationsCount.value > 0)
-                        Positioned(
-                          right: -4,
-                          top: -4,
-                          child: badges.Badge(
-                            badgeContent: Text(
-                              "${controller.notificationsCount.value}",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            badgeStyle: badges.BadgeStyle(
-                              badgeColor: Colors.red,
-                              padding: EdgeInsets.all(5),
-                            ),
+            label: 'Friends'.tr,
+            labelStyle: TextStyle(fontSize: width * 0.025)
+          ),
+          CurvedNavigationBarItem(
+            child: Obx(() => Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(
+                      Icons.notifications_active,
+                      size: isLandscape ? width * 0.05 : width * 0.09,
+                      color: Colors.blue,
+                    ),
+                    if (controller.notificationsCount.value > 0)
+                      Positioned(
+                        right: -4,
+                        top: -4,
+                        child: badges.Badge(
+                          badgeContent: Text(
+                            "${controller.notificationsCount.value}",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                          badgeStyle: badges.BadgeStyle(
+                            badgeColor: Colors.red,
+                            padding: EdgeInsets.all(5),
                           ),
                         ),
-                    ],
-                  )),
-              label: 'Notifications'.tr,
-            ),
-            CurvedNavigationBarItem(
-              child: Obx(() => Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Icon(
-                        Icons.messenger_outlined,
-                        size: isLandscape ? width * 0.05 : width * 0.09,
-                        color: Colors.blue,
                       ),
-                      if (controller.messageCount.value > 0)
-                        Positioned(
-                          right: -4,
-                          top: -4,
-                          child: badges.Badge(
-                            badgeContent: Text(
-                              "${controller.messageCount.value}",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            badgeStyle: badges.BadgeStyle(
-                              badgeColor: Colors.red,
-                              padding: EdgeInsets.all(5),
-                            ),
+                  ],
+                )),
+            label: 'Notifications'.tr,
+            labelStyle: TextStyle(fontSize: width * 0.025)
+          ),
+          CurvedNavigationBarItem(
+            child: Obx(() => Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(
+                      Icons.messenger_outlined,
+                      size: isLandscape ? width * 0.05 : width * 0.09,
+                      color: Colors.blue,
+                    ),
+                    if (controller.messageCount.value > 0)
+                      Positioned(
+                        right: -4,
+                        top: -4,
+                        child: badges.Badge(
+                          badgeContent: Text(
+                            "${controller.messageCount.value}",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                          badgeStyle: badges.BadgeStyle(
+                            badgeColor: Colors.red,
+                            padding: EdgeInsets.all(5),
                           ),
                         ),
-                    ],
-                  )),
-              label: 'Messages'.tr,
-            ),
-          ],
-          onTap: (index) {
-            if (index >= 0 && index < pages.length) {
-              setState(() {
-                pageIndext = index;
-              });
-            } else {
-              print("تحذير: المؤشر خارج النطاق! index = $index");
-            }
-          },
-        ),
+                      ),
+                  ],
+                )),
+            label: 'Messages'.tr,
+            labelStyle: TextStyle(fontSize: width * 0.025)
+          ),
+        ],
+        onTap: (index) {
+          if (index >= 0 && index < pages.length) {
+            setState(() {
+              pageIndext = index;
+            });
+          } else {
+            print("تحذير: المؤشر خارج النطاق! index = $index");
+          }
+        },
       ),
       body: (pageIndext >= 0 && pageIndext < pages.length)
           ? pages[pageIndext]

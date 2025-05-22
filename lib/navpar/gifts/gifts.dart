@@ -17,6 +17,8 @@ class _GiftsPageState extends State<GiftsPage> {
 
   @override
   Widget build(BuildContext context) {
+      final width = MediaQuery.of(context).size.width;
+      final height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       floatingActionButton: FloatingActionButton(
@@ -28,7 +30,7 @@ class _GiftsPageState extends State<GiftsPage> {
       ),
       body: Column(
         children: [
-          _buildHeader(500, 770),
+          _buildHeader(width, height),
           Expanded(
             child: isUserGifts
                 ? UserGiftsSection(

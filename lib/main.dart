@@ -26,8 +26,8 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  bool hasInternet = await checkInternetConnection();
   await Firebase.initializeApp();
+  bool hasInternet = await checkInternetConnection();
   Get.put(ProfileController());
   await setupNotifications();
 
@@ -118,7 +118,6 @@ class _MyAppState extends State<MyApp> {
 Future<void> setupNotifications() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  // إنشاء قناة الإشعارات
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel',
     'High Importance Notifications',
@@ -126,12 +125,17 @@ Future<void> setupNotifications() async {
     importance: Importance.high,
   );
 
-  // تهيئة الإشعارات المحلية
   const AndroidInitializationSettings androidInitializationSettings =
       AndroidInitializationSettings('@drawable/ic_notification');
 
+  // ✅ التعديل هنا باستخدام الكلاس الصحيح
+  const DarwinInitializationSettings iosInitializationSettings = DarwinInitializationSettings();
+
   final InitializationSettings initializationSettings =
-      InitializationSettings(android: androidInitializationSettings);
+      InitializationSettings(
+        android: androidInitializationSettings,
+        iOS: iosInitializationSettings,
+      );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
@@ -145,6 +149,7 @@ Future<void> setupNotifications() async {
     badge: true,
     sound: true,
   );
+
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     if (notification != null) {
@@ -152,6 +157,7 @@ Future<void> setupNotifications() async {
     }
   });
 }
+
 
 myrequestpermission() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -182,7 +188,7 @@ myrequestpermission() async {
     print("Camera permission denied");
   }
 
-//   // تحديث الحالة في صفحة الإعدادات بعد طلب الأذونات
+  // تحديث الحالة في صفحة الإعدادات بعد طلب الأذونات
   updatePermissionStatus(cameraStatus, settings);
 }
 
