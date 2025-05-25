@@ -126,7 +126,7 @@ Future<void> setupNotifications() async {
   );
 
   const AndroidInitializationSettings androidInitializationSettings =
-      AndroidInitializationSettings('@drawable/ic_notification');
+      AndroidInitializationSettings('@drawable/ic_stat_ic_notification');
 
   // ✅ التعديل هنا باستخدام الكلاس الصحيح
   const DarwinInitializationSettings iosInitializationSettings = DarwinInitializationSettings();

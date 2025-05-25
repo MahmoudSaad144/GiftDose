@@ -9,10 +9,12 @@ import 'package:giftdose/navpar/darwar/profile/edit_profile.dart';
 import 'package:giftdose/translation/language_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfileController extends GetxController {
   var notificationsCount = 0.obs;
@@ -346,25 +348,43 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Future<File?> _pickImage(ImageSource source) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-        source: source,
-        imageQuality: 85,
-        maxWidth: 1000,
-      );
-      return pickedFile != null ? File(pickedFile.path) : null;
-    } catch (e) {
-      Get.snackbar(
-        "خطأ",
-        "حدث خطأ أثناء اختيار الصورة",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return null;
-    }
+ Future<File?> _pickImage(ImageSource source) async {
+  try {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+      source: source,
+      imageQuality: 85,
+      maxWidth: 1000,
+    );
+
+    if (pickedFile == null) return null;
+
+    // اقرأ الصورة كـ bytes
+    final originalBytes = await pickedFile.readAsBytes();
+
+    // فك ترميز الصورة
+    final decodedImage = img.decodeImage(originalBytes);
+    if (decodedImage == null) return null;
+
+    // حول الصورة إلى JPEG
+    final jpgBytes = img.encodeJpg(decodedImage);
+
+    // احفظ الصورة مؤقتًا
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final jpgFile = await File(tempPath).writeAsBytes(jpgBytes);
+
+    return jpgFile;
+  } catch (e) {
+    Get.snackbar(
+      "خطأ",
+      "حدث خطأ أثناء اختيار الصورة",
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
+    return null;
   }
+}
 
   Future<void> _uploadImage(File image, BuildContext context) async {
     try {

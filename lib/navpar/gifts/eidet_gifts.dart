@@ -10,9 +10,12 @@ import 'package:giftdose/navpar/gifts/eidetexception.dart';
 import 'package:giftdose/translation/language_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 
 class EidetGiftController extends GetxController {
   final List<int> selectedFriends2 = [];
@@ -98,18 +101,51 @@ class EidetGiftController extends GetxController {
     );
   }
 
-  void _processPickedImage(XFile? pickedFile) {
-    if (pickedFile != null) {
-      String extension = pickedFile.path.split('.').last.toLowerCase();
-      if (extension != 'jpg' && extension != 'jpeg' && extension != 'png') {
+void _processPickedImage(XFile? pickedFile) async {
+  if (pickedFile != null) {
+    String extension = pickedFile.path.split('.').last.toLowerCase();
+
+    if (extension != 'jpg' && extension != 'jpeg' && extension != 'png' && extension != 'heic') {
+      Get.snackbar(
+        "", 
+        "You must choose an image in JPG, PNG, or JPEG format.".tr,
+        backgroundColor: Colors.red, 
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    try {
+      final originalBytes = await pickedFile.readAsBytes();
+      final decodedImage = img.decodeImage(originalBytes);
+
+      if (decodedImage == null) {
         Get.snackbar(
-            "", "You must choose an image in JPG, PNG, or JPEG format.".tr,
-            backgroundColor: Colors.red, colorText: Colors.white);
+          "", 
+          "Failed to process the image.".tr,
+          backgroundColor: Colors.red, 
+          colorText: Colors.white,
+        );
         return;
       }
-      image.value = File(pickedFile.path);
+
+      // تحويل للصيغة المتوافقة (JPEG)
+      final jpgBytes = img.encodeJpg(decodedImage);
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final jpgFile = await File(tempPath).writeAsBytes(jpgBytes);
+
+      image.value = jpgFile;
+    } catch (e) {
+      Get.snackbar(
+        "", 
+        "حدث خطأ أثناء معالجة الصورة".tr,
+        backgroundColor: Colors.red, 
+        colorText: Colors.white,
+      );
     }
   }
+}
 
   void updateLocation(double lat, double lng, String address, String placeId,
       String placeName) {
