@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:883279588390:android:3490e26e72a30bfd210ae7",
+        "mobilesdk_app_id": "1:883279588390:android:47610f816780da43210ae7",
         "android_client_info": {
-          "package_name": "com.solinz.giftdose"
+          "package_name": "com.solinzcompany.giftdose"
         }
       },
       "oauth_client": [],

@@ -180,7 +180,7 @@ class ProfilePage extends StatelessWidget {
                     Obx(() => Text(
                           controller.name.value.isNotEmpty
                               ? controller.name.value
-                              : "الاسم غير متاح",
+                              : "No data available.".tr,
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         )),
@@ -190,25 +190,25 @@ class ProfilePage extends StatelessWidget {
                         'Username'.tr,
                         controller.username.value.isNotEmpty
                             ? controller.username.value
-                            : "غير متاح")),
+                            : "No data available.".tr)),
                     Obx(() => infoTile(
                         Icons.phone,
                         'Phone'.tr,
                         controller.phone.value.isNotEmpty
                             ? controller.phone.value
-                            : "غير متاح")),
+                            : "No data available.".tr)),
                     Obx(() => infoTile(
                         Icons.email,
                         'Email'.tr,
                         controller.email.value.isNotEmpty
                             ? controller.email.value
-                            : "غير متاح")),
+                            : "No data available.".tr)),
                     Obx(() => infoTile(
                         Icons.location_on,
                         'Location'.tr,
                         controller.country.value.isNotEmpty
                             ? controller.country.value
-                            : "غير متاح")),
+                            : "No data available.".tr)),
                     SizedBox(height: 10),
                     Padding(
                         padding: EdgeInsets.symmetric(

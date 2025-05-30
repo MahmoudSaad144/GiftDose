@@ -1,3 +1,11 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/auth/forget%20password.dart';
 import 'package:giftdose/auth/longin.dart';
 import 'package:giftdose/auth/singup.dart';
@@ -11,14 +19,6 @@ import 'package:giftdose/no_internet.dart';
 import 'package:giftdose/startpage.dart';
 import 'package:giftdose/translation/language_service.dart';
 import 'package:giftdose/translation/translation_service.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -129,13 +129,24 @@ Future<void> setupNotifications() async {
       AndroidInitializationSettings('@drawable/ic_stat_ic_notification');
 
   // ✅ التعديل هنا باستخدام الكلاس الصحيح
-  const DarwinInitializationSettings iosInitializationSettings = DarwinInitializationSettings();
+  const DarwinInitializationSettings iosInitializationSettings =
+      DarwinInitializationSettings();
 
-  final InitializationSettings initializationSettings =
-      InitializationSettings(
-        android: androidInitializationSettings,
-        iOS: iosInitializationSettings,
-      );
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: androidInitializationSettings,
+    iOS: iosInitializationSettings,
+  );
+
+  // 1) مسح كل الإشعارات
+  await flutterLocalNotificationsPlugin.cancelAll();
+
+  // 2) تصفير البادج على iOS
+  try {
+    await const MethodChannel('app.badge').invokeMethod('clearBadge');
+  } catch (e) {
+    // لو Android مش هتشتغل القناة دي، متقلقش
+    print('Failed to clear badge: $e');
+  }
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
@@ -157,7 +168,6 @@ Future<void> setupNotifications() async {
     }
   });
 }
-
 
 myrequestpermission() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;

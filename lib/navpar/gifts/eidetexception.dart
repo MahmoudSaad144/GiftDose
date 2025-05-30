@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
-
 import 'package:giftdose/translation/language_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class Exceptionspage2 extends StatefulWidget {
   const Exceptionspage2({super.key});
@@ -127,43 +126,64 @@ class _Exceptionspage2State extends State<Exceptionspage2> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          width: width,
-          decoration: const BoxDecoration(
-            color: Color(0xFFF9EFC7),
-            borderRadius:
-                BorderRadius.only(bottomLeft: Radius.circular(100000)),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              Text(
-                'Exception'.tr,
-                style: const TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue),
-              ),
-              const SizedBox(height: 20),
-              Expanded(child: _listSection()),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  minimumSize: Size(width * 0.8, 50),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              color: const Color(0xFFF9EFC7),
+              child: SafeArea(
+                child: Container(
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF9EFC7),
+                    borderRadius:
+                        BorderRadius.only(bottomLeft: Radius.circular(100000)),
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Text(
+                        'Exception'.tr,
+                        style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue),
+                      ),
+                      const SizedBox(height: 20),
+                      Expanded(child: _listSection()),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          minimumSize: Size(width * 0.8, 50),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)),
+                        ),
+                        onPressed: () {
+                          Get.back(
+                              result:
+                                  selectedFriendIds); // إرجاع القائمة المحددة
+                        },
+                        child: const Text("إرسال المحددين",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20)),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-                onPressed: () {
-                  Get.back(result: selectedFriendIds); // إرجاع القائمة المحددة
-                },
-                child: const Text("إرسال المحددين",
-                    style: TextStyle(color: Colors.white, fontSize: 20)),
               ),
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            top: 40,
+            left: Get.locale?.languageCode == 'ar' ? null : 10,
+            right: Get.locale?.languageCode == 'ar' ? 10 : null,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ],
       ),
     );
   }

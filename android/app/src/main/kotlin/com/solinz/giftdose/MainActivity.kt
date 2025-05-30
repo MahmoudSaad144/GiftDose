@@ -1,4 +1,4 @@
-package com.solinz.giftdose
+package com.solinzcompany.giftdose
 
 import io.flutter.embedding.android.FlutterActivity
 

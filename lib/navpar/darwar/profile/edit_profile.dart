@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'package:giftdose/api/curd.dart';
-import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/Controller/token.dart';
-import 'package:giftdose/translation/language_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:giftdose/Controller/token.dart';
+import 'package:giftdose/api/curd.dart';
+import 'package:giftdose/api/linkserver.dart';
+import 'package:giftdose/translation/language_service.dart';
 
 class AddProfilePage extends StatefulWidget {
   final String name;
@@ -118,143 +119,184 @@ class _AddProfilePageState extends State<AddProfilePage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Container(
-        height: height,
-        width: width,
-        decoration: const BoxDecoration(
-          color: Color(0xFFF9EFC7),
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(100000),
-            bottomRight: Radius.circular(0),
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Form(
-              key: formstate,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: height * 0.05),
-                  Text(
-                    "Edit Profile".tr,
-                    style: const TextStyle(
-                        fontSize: 40, fontFamily: "Caveat", color: Colors.blue),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: height * 0.05, horizontal: width * 0.1),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              height: height,
+              width: width,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF9EFC7),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(100000),
+                  bottomRight: Radius.circular(0),
+                ),
+              ),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formstate,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _buildCustomTextField(Icons.person, "Enter Name".tr,
-                            nameController, true),
-                        _buildCustomTextField(Icons.person,
-                            "Enter Name Account".tr, usernameController, true),
-                        _buildCustomTextField(Icons.email, "Enter Email".tr,
-                            emailController, false),
-                        _buildCustomTextField(Icons.phone, "Enter Phone".tr,
-                            phoneController, true),
-                        _buildCustomTextField(Icons.location_on,
-                            "Enter Location".tr, locationController, true),
-                        Padding(
-                          padding: EdgeInsets.only(top: height * 0.03),
-                          child: TextFormField(
-                            controller: passwordController,
-                            obscureText: !isPasswordVisible,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: "Enter Password".tr,
-                              prefixIcon: const Icon(
-                                Icons.key_sharp,
-                                color: Colors.blue,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    isPasswordVisible = !isPasswordVisible;
-                                  });
-                                },
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                          ),
+                        SizedBox(height: height * 0.05),
+                        Text(
+                          "Edit Profile".tr,
+                          style: const TextStyle(
+                              fontSize: 40,
+                              fontFamily: "Caveat",
+                              color: Colors.blue),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: height * 0.03),
-                          child: TextFormField(
-                            controller: confirmpasswordController,
-                            obscureText: !isPasswordVisible,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText:
-                                  "Enter Password to Confirm password".tr,
-                              prefixIcon: const Icon(
-                                Icons.key_sharp,
-                                color: Colors.blue,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    isPasswordVisible = !isPasswordVisible;
-                                  });
-                                },
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value != passwordController.text) {
-                                return "كلمة السر لا تتطابق";
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          width: width * 5,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF2B77B6),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25)),
-                            ),
-                            onPressed: isLoading ? null : editProfile,
-                            child: isLoading
-                                ? CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  )
-                                : Text(
-                                    "Save Changes".tr,
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.white),
+                          padding: EdgeInsets.symmetric(
+                              vertical: height * 0.05, horizontal: width * 0.1),
+                          child: Column(
+                            children: [
+                              _buildCustomTextField(Icons.person,
+                                  "Enter Name".tr, nameController, true),
+                              _buildCustomTextField(
+                                  Icons.person,
+                                  "Enter Name Account".tr,
+                                  usernameController,
+                                  true),
+                              _buildCustomTextField(Icons.email,
+                                  "Enter Email".tr, emailController, false),
+                              _buildCustomTextField(Icons.phone,
+                                  "Enter Phone".tr, phoneController, true),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: TextFormField(
+                                  controller: locationController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.location_on,
+                                        color: Colors.blue),
+                                    hintText: "Enter Location".tr,
+                                    filled: true,
+                                    enabled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
                                   ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: height * 0.03),
+                                child: TextFormField(
+                                  controller: passwordController,
+                                  obscureText: !isPasswordVisible,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    labelText: "Enter Password".tr,
+                                    prefixIcon: const Icon(
+                                      Icons.key_sharp,
+                                      color: Colors.blue,
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        isPasswordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          isPasswordVisible =
+                                              !isPasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: height * 0.03),
+                                child: TextFormField(
+                                  controller: confirmpasswordController,
+                                  obscureText: !isPasswordVisible,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    labelText:
+                                        "Enter Password to Confirm password".tr,
+                                    prefixIcon: const Icon(
+                                      Icons.key_sharp,
+                                      color: Colors.blue,
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        isPasswordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          isPasswordVisible =
+                                              !isPasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value != passwordController.text) {
+                                      return "Confirm Password not same Password"
+                                          .tr;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Container(
+                                width: width * 5,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF2B77B6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
+                                  ),
+                                  onPressed: isLoading ? null : editProfile,
+                                  child: isLoading
+                                      ? CircularProgressIndicator(
+                                          color: Colors.blue,
+                                        )
+                                      : Text(
+                                          "Save Changes".tr,
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+          Positioned(
+            top: 40,
+            left: Get.locale?.languageCode == 'ar' ? null : 10,
+            right: Get.locale?.languageCode == 'ar' ? 10 : null,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -278,7 +320,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
           ),
         ),
         validator: (value) {
-          if (value == null || value.isEmpty) return "$hint مطلوب";
+          if (value == null || value.isEmpty) return "$hint";
           return null;
         },
       ),

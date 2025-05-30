@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:giftdose/translation/language_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:giftdose/navpar/darwar/occasions/add_occasions.dart';
+import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/Controller/token.dart';
-
+import 'package:giftdose/navpar/darwar/occasions/add_occasions.dart';
+import 'package:giftdose/translation/language_service.dart';
 import 'package:intl/intl.dart';
 
 class Occasions extends StatefulWidget {
@@ -138,9 +138,6 @@ class _OccasionsState extends State<Occasions> {
         Get.snackbar("", " ${responseData["message"].toString().tr}",
             backgroundColor: Colors.green, colorText: Colors.black);
         _fetchOccasions();
-      } else {
-        Get.snackbar("", " ${responseData["message"].toString().tr}",
-            backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {
       Get.snackbar("", "Server connection failed: $e",

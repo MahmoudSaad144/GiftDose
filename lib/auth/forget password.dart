@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/Controller/token.dart';
-import 'package:giftdose/navpar/darwar/profile/profile.dart';
-import 'package:giftdose/translation/language_service.dart';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pinput/pinput.dart';
+import 'package:giftdose/Controller/token.dart';
+import 'package:giftdose/api/linkserver.dart';
+import 'package:giftdose/navpar/darwar/profile/profile.dart';
+import 'package:giftdose/translation/language_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:pinput/pinput.dart';
 
 // استبدل هذه القيمة برابط API الخاص بك
 
@@ -247,133 +246,153 @@ class _ForgetpasswordpageState extends State<Forgetpasswordpage> {
     final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Container(
-        height: height,
-        width: width,
-        decoration: const BoxDecoration(
-          color: Color(0xFFF9EFC7),
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(100000),
-            bottomRight: Radius.circular(0),
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: TweenAnimationBuilder(
-              duration: const Duration(seconds: 1),
-              tween: Tween(begin: 0.0, end: 1.0),
-              builder: (context, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: height * 0.05),
-                      Column(
-                        children: [
-                          Image.asset(
-                            "images/logo.png",
-                            height: height * 0.1,
-                            width: height * 0.1,
-                            fit: BoxFit.cover,
-                          ),
-                          const Text(
-                            "Gift Dose",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 40,
-                              fontFamily: "Caveat",
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: height * 0.05,
-                          horizontal: width * 0.1,
-                        ),
-                        child: Form(
-                          key: formstate,
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                controller: _emailController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 1)),
-                                  prefixIcon: const Icon(Icons.email,
-                                      color: Colors.blue),
-                                  hintText: "Enter Email".tr,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              height: height,
+              width: width,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF9EFC7),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(100000),
+                  bottomRight: Radius.circular(0),
+                ),
+              ),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: TweenAnimationBuilder(
+                    duration: const Duration(seconds: 1),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: height * 0.05),
+                            Column(
+                              children: [
+                                Image.asset(
+                                  "images/logo.png",
+                                  height: height * 0.1,
+                                  width: height * 0.1,
+                                  fit: BoxFit.cover,
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return "البريد الإلكتروني مطلوب";
-                                  } else if (!RegExp(
-                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                      .hasMatch(value)) {
-                                    return "أدخل بريد إلكتروني صحيح";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: height * 0.05),
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: MaterialButton(
-                                    onPressed:
-                                        _isLoading ? null : forgetPassword,
-                                    child: Container(
-                                      height: 50,
-                                      width: width * 0.8,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.bottomCenter,
-                                          colors: [
-                                            const Color.fromARGB(
-                                                    255, 43, 119, 182)
-                                                .withOpacity(1),
-                                            const Color.fromARGB(
-                                                    255, 86, 155, 211)
-                                                .withOpacity(1),
-                                            const Color.fromARGB(
-                                                    255, 121, 195, 255)
-                                                .withOpacity(1),
-                                          ],
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: _isLoading
-                                            ? CircularProgressIndicator(
-                                                color: Colors.white,
-                                              )
-                                            : Text(
-                                                "Send".tr,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                      ),
-                                    ),
+                                const Text(
+                                  "Gift Dose",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 40,
+                                    fontFamily: "Caveat",
+                                    color: Colors.blue,
                                   ),
                                 ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: height * 0.05,
+                                horizontal: width * 0.1,
                               ),
-                            ],
-                          ),
+                              child: Form(
+                                key: formstate,
+                                child: Column(
+                                  children: [
+                                    TextFormField(
+                                      controller: _emailController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.black, width: 1)),
+                                        prefixIcon: const Icon(Icons.email,
+                                            color: Colors.blue),
+                                        hintText: "Enter Email".tr,
+                                      ),
+                                      validator: (value) {
+                                        if (value == null ||
+                                            value.trim().isEmpty) {
+                                          return "Enter Email".tr;
+                                        } else if (!RegExp(
+                                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                            .hasMatch(value)) {
+                                          return "Email not valid".tr;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: height * 0.05),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: MaterialButton(
+                                          onPressed: _isLoading
+                                              ? null
+                                              : forgetPassword,
+                                          child: Container(
+                                            height: 50,
+                                            width: width * 0.8,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              gradient: LinearGradient(
+                                                begin: Alignment.bottomCenter,
+                                                colors: [
+                                                  const Color.fromARGB(
+                                                          255, 43, 119, 182)
+                                                      .withOpacity(1),
+                                                  const Color.fromARGB(
+                                                          255, 86, 155, 211)
+                                                      .withOpacity(1),
+                                                  const Color.fromARGB(
+                                                          255, 121, 195, 255)
+                                                      .withOpacity(1),
+                                                ],
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: _isLoading
+                                                  ? CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                    )
+                                                  : Text(
+                                                      "Send".tr,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ),
             ),
           ),
-        ),
+          Positioned(
+            top: 40,
+            left: Get.locale?.languageCode == 'ar' ? null : 10,
+            right: Get.locale?.languageCode == 'ar' ? 10 : null,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ],
       ),
     );
   }

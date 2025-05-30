@@ -26,10 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to the camera to take photos</string>
+	<string>We use your camera to allow you to upload your profile picture and photos of your gifts.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>This app needs access to your contacts</string>
+	<string>We use your contacts to help you find friends who are already using the app.</string>
 	<key>GMSApiKey</key>
 	<string>AIzaSyCE8Z_S9GkPrz0_cvEHSF2j_UMIUiJgud8</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -39,9 +41,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photo library</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This app uses tracking to deliver better ads and notifications</string>
+	<string>This app needs access to your photo library to upload your profile picture and photos of your gifts.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

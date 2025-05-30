@@ -1,14 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/navpar/gifts/add_gifts.dart';
 import 'package:giftdose/navpar/message/chat.dart';
 import 'package:giftdose/translation/language_service.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class FriendProfilePage extends StatefulWidget {
   final String userId;
@@ -206,163 +205,186 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          double width = constraints.maxWidth;
-          double height = constraints.maxHeight;
-          return Obx(() {
-            if (isLoading.value) {
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: Colors.blue,
-              ));
-            }
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                double width = constraints.maxWidth;
+                double height = constraints.maxHeight;
+                return Obx(() {
+                  if (isLoading.value) {
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ));
+                  }
 
-            if (userData.isEmpty) {
-              return Center(child: Text("No data available.".tr));
-            }
+                  if (userData.isEmpty) {
+                    return Center(child: Text("No data available.".tr));
+                  }
 
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: height,
-                        width: width,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF9EFC7),
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(10000000),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          const SizedBox(height: 50),
-                          Padding(
-                            padding: EdgeInsets.all(width * 0.04),
-                            child: Column(
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              height: height,
+                              width: width,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF9EFC7),
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(10000000),
+                                ),
+                              ),
+                            ),
+                            Column(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          "$linkservername/${userData['photo']}"),
-                                      fit: BoxFit.cover,
-                                    ),
+                                const SizedBox(height: 50),
+                                Padding(
+                                  padding: EdgeInsets.all(width * 0.04),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                "$linkservername/${userData['photo']}"),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        height: width * 0.3,
+                                        width: width * 0.3,
+                                      ),
+                                      SizedBox(height: height * 0.015),
+                                      Text(userData['name'] ?? "Unknown",
+                                          style: TextStyle(
+                                              fontSize: width * 0.06,
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 20),
+                                      Obx(() => Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              isLoadingFriendRequest.value
+                                                  ? const CircularProgressIndicator()
+                                                  : _getFriendshipActionButton(),
+                                              const SizedBox(width: 10),
+                                              actionButton(
+                                                Icons.message,
+                                                Colors.green,
+                                                () => Get.to(ChatPage(
+                                                  userId: widget.userId,
+                                                  userName: userData['name'],
+                                                  userPhoto:
+                                                      "$linkservername/${userData['photo']}",
+                                                )),
+                                              ),
+                                            ],
+                                          )),
+                                      SizedBox(height: height * 0.02),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(width: width * 0.02),
+                                          Expanded(
+                                              child: infoColum(
+                                            mywidth: width,
+                                            myBool: true,
+                                            Location: userData['country'] ?? "",
+                                            email: userData['email'] ?? "",
+                                            username:
+                                                userData['username'] ?? "",
+                                            phone: userData['phone'] ?? "",
+                                          )),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  height: width * 0.3,
-                                  width: width * 0.3,
                                 ),
                                 SizedBox(height: height * 0.015),
-                                Text(userData['name'] ?? "Unknown",
-                                    style: TextStyle(
-                                        fontSize: width * 0.06,
-                                        fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 20),
-                                Obx(() => Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        isLoadingFriendRequest.value
-                                            ? const CircularProgressIndicator()
-                                            : _getFriendshipActionButton(),
-                                        const SizedBox(width: 10),
-                                        actionButton(
-                                          Icons.message,
-                                          Colors.green,
-                                          () => Get.to(ChatPage(
-                                            userId: widget.userId,
-                                            userName: userData['name'],
-                                            userPhoto:
-                                                "$linkservername/${userData['photo']}",
-                                          )),
-                                        ),
-                                      ],
-                                    )),
-                                SizedBox(height: height * 0.02),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SizedBox(width: width * 0.02),
-                                    Expanded(
-                                        child: infoColum(
-                                      mywidth: width,
-                                      myBool: true,
-                                      Location: userData['country'] ?? "",
-                                      email: userData['email'] ?? "",
-                                      username: userData['username'] ?? "",
-                                      phone: userData['phone'] ?? "",
-                                    )),
+                                    _sectionButton("Gifts".tr, _showGifts.value,
+                                        () {
+                                      _showGifts.value = true;
+                                    },
+                                        const ContinuousRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(100)))),
+                                    _sectionButton(
+                                        "Occasion".tr, !_showGifts.value, () {
+                                      _showGifts.value = false;
+                                    },
+                                        const ContinuousRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                bottomRight:
+                                                    Radius.circular(100))))
                                   ],
+                                ),
+                                SizedBox(
+                                  height: height * 0.9,
+                                  child: Obx(() {
+                                    int itemCount = _showGifts.value
+                                        ? (userData['gift']?.length ?? 0)
+                                        : (userData['occasion']?.length ?? 0);
+
+                                    if (itemCount == 0) {
+                                      return Center(
+                                        child: Text(
+                                          "No results found.".tr,
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemCount: itemCount,
+                                      itemBuilder: (context, index) {
+                                        return _showGifts.value
+                                            ? _giftCard(
+                                                userData['gift'][index],
+                                                width,
+                                                height,
+                                                userData['gift'][index]['id'])
+                                            : _eventCard(
+                                                userData['occasion'][index],
+                                                width,
+                                                height);
+                                      },
+                                    );
+                                  }),
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(height: height * 0.015),
-                          Row(
-                            children: [
-                              _sectionButton("Gifts".tr, _showGifts.value, () {
-                                _showGifts.value = true;
-                              },
-                                  const ContinuousRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(100)))),
-                              _sectionButton("Occasion".tr, !_showGifts.value,
-                                  () {
-                                _showGifts.value = false;
-                              },
-                                  const ContinuousRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(100))))
-                            ],
-                          ),
-                          SizedBox(
-                            height: height * 0.9,
-                            child: Obx(() {
-                              int itemCount = _showGifts.value
-                                  ? (userData['gift']?.length ?? 0)
-                                  : (userData['occasion']?.length ?? 0);
-
-                              if (itemCount == 0) {
-                                return Center(
-                                  child: Text(
-                                    "No results found.".tr,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                );
-                              }
-
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: itemCount,
-                                itemBuilder: (context, index) {
-                                  return _showGifts.value
-                                      ? _giftCard(
-                                          userData['gift'][index],
-                                          width,
-                                          height,
-                                          userData['gift'][index]['id'])
-                                      : _eventCard(userData['occasion'][index],
-                                          width, height);
-                                },
-                              );
-                            }),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          });
-        },
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            ),
+          ),
+          Positioned(
+            top: 40,
+            left: Get.locale?.languageCode == 'ar' ? null : 10,
+            right: Get.locale?.languageCode == 'ar' ? 10 : null,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,15 +1,16 @@
-import 'dart:convert';
 import 'dart:async';
-import 'package:giftdose/Controller/token.dart';
+import 'dart:convert';
 
-import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/fanction/mypintnput.dart';
-import 'package:giftdose/navpar/darwar/profile/profile.dart';
-import 'package:giftdose/translation/language_service.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:giftdose/Controller/token.dart';
+import 'package:giftdose/api/linkserver.dart';
+import 'package:giftdose/component/country_picker_code.dart';
+import 'package:giftdose/fanction/mypintnput.dart';
+import 'package:giftdose/navpar/darwar/profile/profile.dart';
+import 'package:giftdose/translation/language_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -31,7 +32,7 @@ class _SinguppageState extends State<Singuppage> {
   bool _isLoading = false;
   bool isPasswordVisible = false;
   DateTime? _selectedDate;
-  Country? selectedCountry;
+  String? phone_code;
   Country? selectedCountry2;
   bool showWorldWide = true;
 
@@ -136,7 +137,6 @@ class _SinguppageState extends State<Singuppage> {
           ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
           : null;
       String phoneNumber = _phoneNumberController.text;
-      String country = selectedCountry?.name ?? '';
       String password = _passwordController.text;
       String confirmpassword = _ConfirmpasswordController.text;
       String country2 = selectedCountry2?.name ?? '';
@@ -155,12 +155,10 @@ class _SinguppageState extends State<Singuppage> {
         "email": email,
         "bday": formattedDate,
         "phone": phoneNumber, // إرسال رقم الهاتف مع كود الدولة
-        "phone_code":
-            selectedCountry!.phoneCode, // إرسال رقم الهاتف مع كود الدولة
-        "country": country,
+        "phone_code": phone_code, // إرسال رقم الهاتف مع كود الدولة
+        "country": country2,
         "password": password,
         "confirmpassword": confirmpassword,
-        "country2": country2,
       };
 
       try {
@@ -265,453 +263,368 @@ class _SinguppageState extends State<Singuppage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Container(
-        height: height,
-        width: width,
-        decoration: const BoxDecoration(
-            color: Color(0xFFF9EFC7),
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(100000),
-                bottomRight: Radius.circular(0))),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: TweenAnimationBuilder(
-              duration: const Duration(seconds: 1),
-              tween: Tween(begin: 0.0, end: 1.0),
-              builder: (context, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: height * 0.05),
-                      Column(
+      body: Stack(children: [
+        Positioned.fill(
+          child: Container(
+            height: height,
+            width: width,
+            decoration: const BoxDecoration(
+                color: Color(0xFFF9EFC7),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(100000),
+                    bottomRight: Radius.circular(0))),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: TweenAnimationBuilder(
+                  duration: const Duration(seconds: 1),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "images/logo.png",
-                            height: height * 0.1,
-                            width: height * 0.1,
-                            fit: BoxFit.cover,
-                          ),
-                          const Text(
-                            "Gift Dose",
-                            style: TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Caveat",
-                                color: Colors.blue),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: height * 0.05, horizontal: width * 0.1),
-                        child: Form(
-                          key: formstate,
-                          child: Column(
+                          SizedBox(height: height * 0.05),
+                          Column(
                             children: [
-                              TextFormField(
-                                controller: _usernameController,
-                                decoration: InputDecoration(
-                                  labelText: 'Enter Name'.tr,
-                                  prefixIcon: const Icon(
-                                    Icons.person,
-                                    color: Colors.blue,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Enter Name'.tr;
-                                  } else if (value.length < 3) {
-                                    return "الاسم  يجب أن يحتوي على 3 خانات على الأقل";
-                                  }
-                                  return null;
-                                },
+                              Image.asset(
+                                "images/logo.png",
+                                height: height * 0.1,
+                                width: height * 0.1,
+                                fit: BoxFit.cover,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: height * 0.03),
-                                child: TextFormField(
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 1)),
-                                    prefixIcon: const Icon(Icons.email,
-                                        color: Colors.blue),
-                                    hintText: "Enter Email".tr,
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.trim().isEmpty) {
-                                      return "البريد الإلكتروني مطلوب";
-                                    } else if (!RegExp(
-                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                        .hasMatch(value)) {
-                                      return "أدخل بريد إلكتروني صحيح";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(top: height * 0.03),
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      hintText: _selectedDate == null
-                                          ? "Choose the date".tr
-                                          : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}"
-                                              .tr,
-                                      filled: false,
-                                      prefixIcon: const Icon(
-                                        Icons.date_range,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    readOnly: true,
-                                    onTap: () {
-                                      _selectDate(context);
-                                    },
-                                    validator: (value) {
-                                      // التحقق من اختيار التاريخ
-                                      if (_selectedDate == null) {
-                                        return "التاريخ مطلوب";
-                                      }
-                                      return null;
-                                    },
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(top: height * 0.03),
-                                child: Row(
-                                  children: [
-                                    // حقل كود الدولة المحسّن
-                                    Container(
-                                      width: width *
-                                          0.3, // عرض مناسب لحقل كود الدولة
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey.shade400),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          showCountryPicker(
-                                            context: context,
-                                            showPhoneCode: true,
-                                            countryListTheme:
-                                                CountryListThemeData(
-                                              flagSize: 25,
-                                              backgroundColor: Colors.white,
-                                              textStyle:
-                                                  TextStyle(fontSize: 16),
-                                              bottomSheetHeight: height * 0.7,
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20.0),
-                                                topRight: Radius.circular(20.0),
-                                              ),
-                                              inputDecoration: InputDecoration(
-                                                labelText: 'Search'.tr,
-                                                hintText:
-                                                    'Start typing to search'.tr,
-                                                prefixIcon:
-                                                    const Icon(Icons.search),
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Colors.blue,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            onSelect: (Country country) {
-                                              setState(() {
-                                                selectedCountry = country;
-                                              });
-                                            },
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 13),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              // عرض علم الدولة + كود الدولة
-                                              Expanded(
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      selectedCountry
-                                                              ?.countryCode ??
-                                                          "🌎",
-                                                      style: TextStyle(
-                                                          fontSize: 20),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: Text(
-                                                        selectedCountry != null
-                                                            ? "+${selectedCountry!.phoneCode}"
-                                                            : "Code".tr,
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.black87,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.arrow_drop_down,
-                                                color: Colors.blue,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 12), // مسافة بين الحقلين
-                                    // حقل رقم الهاتف
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller: _phoneNumberController,
-                                        keyboardType: TextInputType.phone,
-                                        decoration: InputDecoration(
-                                          labelText: "Enter Phone Number".tr,
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Colors.grey.shade400),
-                                          ),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 15,
-                                            horizontal: 15,
-                                          ),
-                                          prefixIcon: Icon(
-                                            Icons.phone,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "رقم الهاتف مطلوب";
-                                          } else if (!RegExp(r"^[0-9]+$")
-                                              .hasMatch(value)) {
-                                            return "رقم الهاتف يجب أن يحتوي على أرقام فقط";
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: height * 0.03),
-                                child: TextFormField(
-                                  controller: _passwordController,
-                                  obscureText: !isPasswordVisible,
-                                  decoration: InputDecoration(
-                                    labelText: "Enter Password".tr,
-                                    prefixIcon: const Icon(
-                                      Icons.key_sharp,
-                                      color: Colors.blue,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        isPasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          isPasswordVisible =
-                                              !isPasswordVisible;
-                                        });
-                                      },
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return "الرقم السري مطلوب";
-                                    } else if (value.length < 6) {
-                                      return "الرقم السري يجب أن يحتوي على 6 خانات على الأقل";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: height * 0.03),
-                                child: TextFormField(
-                                  controller: _ConfirmpasswordController,
-                                  obscureText: !isPasswordVisible,
-                                  decoration: InputDecoration(
-                                    labelText:
-                                        "Enter Password to Confirm password".tr,
-                                    prefixIcon: const Icon(
-                                      Icons.key_sharp,
-                                      color: Colors.blue,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        isPasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          isPasswordVisible =
-                                              !isPasswordVisible;
-                                        });
-                                      },
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return "تأكيد الرقم السري مطلوب";
-                                    } else if (value !=
-                                        _passwordController.text) {
-                                      return "كلمة السر لا تتطابق";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: height * 0.03),
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      flex: 1,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          showCountryPicker(
-                                            context: context,
-                                            showPhoneCode: false,
-                                            onSelect: (Country country) {
-                                              setState(() {
-                                                selectedCountry2 = country;
-                                              });
-                                            },
-                                          );
-                                        },
-                                        child: InputDecorator(
-                                          decoration: InputDecoration(
-                                            labelText: 'Select Country'.tr,
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  selectedCountry2 != null
-                                                      ? "${selectedCountry2!.flagEmoji}  ${selectedCountry2!.name}  "
-                                                      : "Select a country".tr,
-                                                  style: const TextStyle(
-                                                      fontSize: 16),
-                                                ),
-                                              ),
-                                              const Icon(
-                                                Icons.arrow_drop_down,
-                                                color: Colors.blue,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: height * 0.03, bottom: height * 0.03),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: MaterialButton(
-                                      onPressed: _isLoading
-                                          ? null
-                                          : () {
-                                              if (formstate.currentState!
-                                                  .validate()) {
-                                                signup();
-                                              }
-                                            },
-                                      child: Container(
-                                        height: 50,
-                                        width: width * 0.8,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.bottomCenter,
-                                            colors: [
-                                              const Color.fromARGB(
-                                                      255, 43, 119, 182)
-                                                  .withOpacity(1),
-                                              const Color.fromARGB(
-                                                      255, 86, 155, 211)
-                                                  .withOpacity(1),
-                                              const Color.fromARGB(
-                                                      255, 121, 195, 255)
-                                                  .withOpacity(1)
-                                            ],
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: _isLoading
-                                              ? CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                )
-                                              : Text(
-                                                  "Sing Up".tr,
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 255, 255, 255),
-                                                      fontSize: 20),
-                                                ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              const Text(
+                                "Gift Dose",
+                                style: TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Caveat",
+                                    color: Colors.blue),
                               ),
                             ],
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: height * 0.05,
+                                horizontal: width * 0.1),
+                            child: Form(
+                              key: formstate,
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    controller: _usernameController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Enter Name'.tr,
+                                      prefixIcon: const Icon(
+                                        Icons.person,
+                                        color: Colors.blue,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Enter Name'.tr;
+                                      } else if (value.length < 3) {
+                                        return "الاسم  يجب أن يحتوي على 3 خانات على الأقل";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: height * 0.03),
+                                    child: TextFormField(
+                                      controller: _emailController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.black, width: 1)),
+                                        prefixIcon: const Icon(Icons.email,
+                                            color: Colors.blue),
+                                        hintText: "Enter Email".tr,
+                                      ),
+                                      validator: (value) {
+                                        if (value == null ||
+                                            value.trim().isEmpty) {
+                                          return "Enter Email".tr;
+                                        } else if (!RegExp(
+                                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                            .hasMatch(value)) {
+                                          return "أدخل بريد إلكتروني صحيح";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding:
+                                          EdgeInsets.only(top: height * 0.03),
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          hintText: _selectedDate == null
+                                              ? "Choose the date".tr
+                                              : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}"
+                                                  .tr,
+                                          filled: false,
+                                          prefixIcon: const Icon(
+                                            Icons.date_range,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        readOnly: true,
+                                        onTap: () {
+                                          _selectDate(context);
+                                        },
+                                        // validator: (value) {
+                                        //   // التحقق من اختيار التاريخ
+                                        //   if (_selectedDate == null) {
+                                        //     return "التاريخ مطلوب";
+                                        //   }
+                                        //   return null;
+                                        // },
+                                      )),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: height * 0.03),
+                                    child: CountryCodePickerField(
+                                      controller: _phoneNumberController,
+                                      label: "Enter Phone".tr,
+                                      onCountryCodeChanged: (code) {
+                                        setState(() {
+                                          phone_code = code;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: height * 0.03),
+                                    child: TextFormField(
+                                      controller: _passwordController,
+                                      obscureText: !isPasswordVisible,
+                                      decoration: InputDecoration(
+                                        labelText: "Enter Password".tr,
+                                        prefixIcon: const Icon(
+                                          Icons.key_sharp,
+                                          color: Colors.blue,
+                                        ),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            isPasswordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              isPasswordVisible =
+                                                  !isPasswordVisible;
+                                            });
+                                          },
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Enter Password".tr;
+                                        } else if (value.length < 6) {
+                                          return 'Password must be bagger than 6 letters'
+                                              .tr;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: height * 0.03),
+                                    child: TextFormField(
+                                      controller: _ConfirmpasswordController,
+                                      obscureText: !isPasswordVisible,
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            "Enter Password to Confirm password"
+                                                .tr,
+                                        prefixIcon: const Icon(
+                                          Icons.key_sharp,
+                                          color: Colors.blue,
+                                        ),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            isPasswordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              isPasswordVisible =
+                                                  !isPasswordVisible;
+                                            });
+                                          },
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Enter Password to Confirm password"
+                                              .tr;
+                                        } else if (value !=
+                                            _passwordController.text) {
+                                          return "Confirm Password not same Password"
+                                              .tr;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: height * 0.03),
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              showCountryPicker(
+                                                context: context,
+                                                exclude: ['IL'],
+                                                showPhoneCode: false,
+                                                onSelect: (Country country) {
+                                                  setState(() {
+                                                    selectedCountry2 = country;
+                                                  });
+                                                },
+                                              );
+                                            },
+                                            child: InputDecorator(
+                                              decoration: InputDecoration(
+                                                labelText: 'Select Country'.tr,
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      selectedCountry2 != null
+                                                          ? "${selectedCountry2!.flagEmoji}  ${selectedCountry2!.name}  "
+                                                          : "Select a country"
+                                                              .tr,
+                                                      style: const TextStyle(
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  const Icon(
+                                                    Icons.arrow_drop_down,
+                                                    color: Colors.blue,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: height * 0.03,
+                                        bottom: height * 0.03),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: MaterialButton(
+                                          onPressed: _isLoading
+                                              ? null
+                                              : () {
+                                                  if (formstate.currentState!
+                                                      .validate()) {
+                                                    signup();
+                                                  }
+                                                },
+                                          child: Container(
+                                            height: 50,
+                                            width: width * 0.8,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              gradient: LinearGradient(
+                                                begin: Alignment.bottomCenter,
+                                                colors: [
+                                                  const Color.fromARGB(
+                                                          255, 43, 119, 182)
+                                                      .withOpacity(1),
+                                                  const Color.fromARGB(
+                                                          255, 86, 155, 211)
+                                                      .withOpacity(1),
+                                                  const Color.fromARGB(
+                                                          255, 121, 195, 255)
+                                                      .withOpacity(1)
+                                                ],
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: _isLoading
+                                                  ? CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                    )
+                                                  : Text(
+                                                      "Sing Up".tr,
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255),
+                                                          fontSize: 20),
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Positioned(
+          top: 40,
+          left: Get.locale?.languageCode == 'ar' ? null : 10,
+          right: Get.locale?.languageCode == 'ar' ? 10 : null,
+          child: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Get.back(),
+          ),
+        ),
+      ]),
     );
   }
 

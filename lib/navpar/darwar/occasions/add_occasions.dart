@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:giftdose/translation/language_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/Controller/token.dart';
+import 'package:giftdose/translation/language_service.dart';
+import 'package:intl/intl.dart';
 
 class AddOccasions extends StatefulWidget {
   const AddOccasions({super.key});
@@ -69,9 +69,6 @@ class _AddOccasionsState extends State<AddOccasions> {
 
         if (response.statusCode == 200) {
           Navigator.pop(context, true);
-        } else {
-          Get.snackbar("Error", " ${responseData["message"].toString().tr}",
-              backgroundColor: Colors.red, colorText: Colors.white);
         }
       } catch (e) {
         if (e.toString().contains('SocketException')) {
@@ -102,135 +99,155 @@ class _AddOccasionsState extends State<AddOccasions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              final double width = constraints.maxWidth;
-              final double height = constraints.maxHeight;
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: OrientationBuilder(
+              builder: (context, orientation) {
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final double width = constraints.maxWidth;
+                    final double height = constraints.maxHeight;
 
-              return Container(
-                height: height,
-                width: width,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF9EFC7),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(100000),
-                    bottomRight: Radius.circular(0),
-                  ),
-                ),
-                child: SafeArea(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: height * 0.02, horizontal: width * 0.1),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(height: height * 0.05),
-                            const Text(
-                              "Gift Dose",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 40,
-                                fontFamily: "Caveat",
-                                color: Colors.blue,
-                              ),
-                            ),
-                            SizedBox(height: height * 0.05),
-                            TextFormField(
-                              controller: _descriptionController,
-                              decoration: InputDecoration(
-                                labelText: 'Occasion Details'.tr,
-                                hintText: 'Enter Occasion Details'.tr,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter occasion details".tr;
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: height * 0.04),
-                            GestureDetector(
-                              onTap: () => _selectDate(context),
-                              child: AbsorbPointer(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    hintText: _selectedDate == null
-                                        ? "Choose date".tr
-                                        : DateFormat('dd/MM/yyyy')
-                                            .format(_selectedDate!),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (_selectedDate == null) {
-                                      return "Please select a date".tr;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: height * 0.05),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: MaterialButton(
-                                  onPressed: _isLoading ? null : _addOccasion,
-                                  child: Container(
-                                    height: height * 0.07,
-                                    width: width * 0.8,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        colors: [
-                                          const Color.fromARGB(
-                                                  255, 43, 119, 182)
-                                              .withOpacity(1),
-                                          const Color.fromARGB(
-                                                  255, 86, 155, 211)
-                                              .withOpacity(1),
-                                          const Color.fromARGB(
-                                                  255, 121, 195, 255)
-                                              .withOpacity(1),
-                                        ],
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: _isLoading
-                                          ? const CircularProgressIndicator(
-                                              color: Colors.white)
-                                          : Text(
-                                              "Add Occasion".tr,
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20),
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                    return Container(
+                      height: height,
+                      width: width,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF9EFC7),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(100000),
+                          bottomRight: Radius.circular(0),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                      child: SafeArea(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: height * 0.02,
+                                horizontal: width * 0.1),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: height * 0.05),
+                                  const Text(
+                                    "Gift Dose",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 40,
+                                      fontFamily: "Caveat",
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                  SizedBox(height: height * 0.05),
+                                  TextFormField(
+                                    controller: _descriptionController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Occasion Details'.tr,
+                                      hintText: 'Enter Occasion Details'.tr,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Enter Occasion Details".tr;
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(height: height * 0.04),
+                                  GestureDetector(
+                                    onTap: () => _selectDate(context),
+                                    child: AbsorbPointer(
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          hintText: _selectedDate == null
+                                              ? "Choose date".tr
+                                              : DateFormat('dd/MM/yyyy')
+                                                  .format(_selectedDate!),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                          ),
+                                        ),
+                                        validator: (value) {
+                                          if (_selectedDate == null) {
+                                            return "Choose date".tr;
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: height * 0.05),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: MaterialButton(
+                                        onPressed:
+                                            _isLoading ? null : _addOccasion,
+                                        child: Container(
+                                          height: height * 0.07,
+                                          width: width * 0.8,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              colors: [
+                                                const Color.fromARGB(
+                                                        255, 43, 119, 182)
+                                                    .withOpacity(1),
+                                                const Color.fromARGB(
+                                                        255, 86, 155, 211)
+                                                    .withOpacity(1),
+                                                const Color.fromARGB(
+                                                        255, 121, 195, 255)
+                                                    .withOpacity(1),
+                                              ],
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: _isLoading
+                                                ? const CircularProgressIndicator(
+                                                    color: Colors.white)
+                                                : Text(
+                                                    "Add Occasion".tr,
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Positioned(
+            top: 40,
+            left: Get.locale?.languageCode == 'ar' ? null : 10,
+            right: Get.locale?.languageCode == 'ar' ? 10 : null,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ],
       ),
     );
   }

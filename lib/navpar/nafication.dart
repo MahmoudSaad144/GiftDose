@@ -1,12 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/fanction/cardnofiticaton.dart';
 import 'package:giftdose/navpar/darwar/profile/profile.dart';
 import 'package:giftdose/translation/language_service.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class Naficationpage extends StatefulWidget {
   const Naficationpage({super.key});

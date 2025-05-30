@@ -22,6 +22,8 @@ class TranslationService extends Translations {
           "Forgot Password": "Forgot Password",
           'Enter Email': 'Enter Email',
           'Enter Password': 'Enter Password',
+          'Password must be bagger than 6 letters':
+              'Password must be bagger than 6 letters',
           'SingUp': 'Sign Up',
           "Profile": "Profile",
           'Gifts purchased': 'Gifts purchased',
@@ -82,6 +84,8 @@ class TranslationService extends Translations {
           "Username copied successfully!": "Username copied successfully!",
           "Are you sure to delete?": "Are you sure to delete?",
           "Enter Password to Confirm password": "Confirm password",
+          "Confirm Password not same Password":
+              "Confirm Password not same Password",
           'currency': 'currency',
           'price': 'price',
           "Sign Up": "Sign Up",
@@ -148,6 +152,8 @@ class TranslationService extends Translations {
               "the activation code has been sent to the email, please check the email",
           "Language": "Language",
           'Confirm location': 'Confirm location',
+          'Enter Email / Username': 'Enter Email / Username',
+          'Email not valid': 'Email not valid'
         },
         'ar_EG': {
           'Hide the gift': 'اخفاء الهدية',
@@ -213,6 +219,8 @@ class TranslationService extends Translations {
           "Forgot Password": ' نسيت كلمة المرور',
           'Enter Email': 'أدخل البريد الإلكتروني',
           'Enter Password': 'أدخل كلمة المرو',
+          'Password must be bagger than 6 letters':
+              "الرقم السري يجب أن يحتوي على 6 خانات على الأقل",
           "Sign Up": "انشاء حساب",
           '''"Don't Have Account?"''': '''"ليس لديك حساب؟"''',
           'Profile': 'الملف الشخصي',
@@ -240,7 +248,9 @@ class TranslationService extends Translations {
           'Find a request...': 'ابحث عن طلب...',
           'Find a friend...': 'ابحث عن صديق...',
           'Edit': 'تعديل',
-          "Enter Password to Confirm password": " لتأكيد كلمة المرور",
+          "Enter Password to Confirm password": " تأكيد كلمة المرور",
+          "Confirm Password not same Password":
+              " كلمة المرور غير متطابقة مع تاكيد كلمة المرور ",
           'name': 'الاسم',
           'phone': 'الهاتف',
           'Event Date': 'تاريخ الحدث',
@@ -293,6 +303,8 @@ class TranslationService extends Translations {
           'Policy': 'السياسة',
           'Occasions': 'المناسبات',
           'Terms': 'الشروط',
+          'Enter Email / Username': ' ادخل البريد الالكتروني او اسم المستخدم ',
+          'Email not valid': ' البريد الالكتروني غير صحيح'
         },
       };
 }

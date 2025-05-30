@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/navpar/friends/connect_with_contacts.dart';
 import 'package:giftdose/navpar/friends/listfrind.dart';
 import 'package:giftdose/navpar/friends/requstlist.dart';
 import 'package:giftdose/navpar/friends/searchuser.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class UserAndFriendsPage extends StatefulWidget {
   const UserAndFriendsPage({super.key});

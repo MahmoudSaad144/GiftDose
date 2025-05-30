@@ -2,16 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:giftdose/api/linkserver.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/token.dart';
-
+import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/fanction/textfild.dart';
 import 'package:giftdose/navpar/darwar/profile/profile.dart';
 import 'package:giftdose/translation/language_service.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:pinput/pinput.dart';
 
@@ -296,11 +295,11 @@ class _LonginpageState extends State<Longinpage> {
                           prefixIcon:
                               const Icon(Icons.email, color: Colors.blue),
                           Bool: false,
-                          hint: "Enter Email".tr,
+                          hint: "Enter Email / Username".tr,
                           mytextcontroller: _emailController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "البريد الإلكتروني مطلوب";
+                              return "Enter Email / Username".tr;
                             }
                             return null;
                           },
@@ -328,9 +327,7 @@ class _LonginpageState extends State<Longinpage> {
                               !isPasswordVisible, // يخفي النص إذا isPasswordVisible = false
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "الرقم السري مطلوب";
-                            } else if (value.length < 6) {
-                              return "الرقم السري يجب أن يحتوي على 6 خانات على الأقل";
+                              return "Enter Password".tr;
                             }
                             return null; // إذا الرقم السري صحيح
                           },

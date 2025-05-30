@@ -96,19 +96,21 @@ class _GiftsPageState extends State<GiftsPage> {
   }
 
   Widget _buildSectionButtons() {
-    return Row(
-      children: [
-        _sectionButton('My gifts'.tr, isUserGifts, () {
-          setState(() {
-            isUserGifts = true;
-          });
-        }),
-        _sectionButton('Gifts purchased'.tr, !isUserGifts, () {
-          setState(() {
-            isUserGifts = false;
-          });
-        }),
-      ],
+    return Expanded(
+      child: Row(
+        children: [
+          _sectionButton('My gifts'.tr, isUserGifts, () {
+            setState(() {
+              isUserGifts = true;
+            });
+          }),
+          _sectionButton('Gifts purchased'.tr, !isUserGifts, () {
+            setState(() {
+              isUserGifts = false;
+            });
+          }),
+        ],
+      ),
     );
   }
 

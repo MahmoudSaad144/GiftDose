@@ -1,12 +1,13 @@
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/frind%20and%20%20rqust/friend.dart';
+import 'package:giftdose/Controller/token.dart';
+import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/navpar/message/chat.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:giftdose/api/curd.dart';
-import 'package:giftdose/Controller/token.dart';
 
 class ConnectWithContacts extends StatefulWidget {
   const ConnectWithContacts({super.key});
@@ -49,18 +50,17 @@ class _ConnectWithContactsState extends State<ConnectWithContacts> {
       page++;
     }
 
-    if (await FlutterContacts.requestPermission()) {
-      List<Contact> contacts =
-          await FlutterContacts.getContacts(withProperties: true);
-      List<String> contactNumbers = contacts
-          .expand((contact) => contact.phones
-              .map((phone) => phone.number.replaceAll(RegExp(r'\D'), '')))
-          .where((number) => number.isNotEmpty)
-          .toList();
+    await FlutterContacts.requestPermission();
+    List<Contact> contacts =
+        await FlutterContacts.getContacts(withProperties: true);
+    List<String> contactNumbers = contacts
+        .expand((contact) => contact.phones
+            .map((phone) => phone.number.replaceAll(RegExp(r'\D'), '')))
+        .where((number) => number.isNotEmpty)
+        .toList();
 
-      if (contactNumbers.isNotEmpty) {
-        await _sendContactsToAPI(contactNumbers);
-      }
+    if (contactNumbers.isNotEmpty) {
+      await _sendContactsToAPI(contactNumbers);
     }
 
     isLoading.value = false;
@@ -92,28 +92,46 @@ class _ConnectWithContactsState extends State<ConnectWithContacts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            color: Color(0xFFF9EFC7),
-            borderRadius:
-                BorderRadius.only(bottomLeft: Radius.circular(100000)),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              color: const Color(0xFFF9EFC7),
+              child: SafeArea(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF9EFC7),
+                    borderRadius:
+                        BorderRadius.only(bottomLeft: Radius.circular(100000)),
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Text('Connect with Contacts'.tr,
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue)),
+                      const SizedBox(height: 20),
+                      Expanded(child: Obx(() => _listSection())),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              Text('Connect with Contacts'.tr,
-                  style: const TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue)),
-              const SizedBox(height: 20),
-              Expanded(child: Obx(() => _listSection())),
-            ],
+          Positioned(
+            top: 40,
+            left: Get.locale?.languageCode == 'ar' ? null : 10,
+            right: Get.locale?.languageCode == 'ar' ? 10 : null,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Get.back(),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

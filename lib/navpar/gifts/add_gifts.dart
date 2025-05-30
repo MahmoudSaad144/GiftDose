@@ -1,18 +1,16 @@
 import 'dart:convert';
-
-import 'package:giftdose/Controller/placelocation.dart';
-
-import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/Controller/token.dart';
-import 'package:giftdose/navpar/gifts/exception.dart';
-import 'package:giftdose/translation/language_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:image/image.dart' as img;
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:giftdose/Controller/placelocation.dart';
+import 'package:giftdose/Controller/token.dart';
+import 'package:giftdose/api/linkserver.dart';
+import 'package:giftdose/navpar/gifts/exception.dart';
+import 'package:giftdose/translation/language_service.dart';
+import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 class GiftController extends GetxController {
@@ -76,8 +74,11 @@ class GiftController extends GetxController {
               title: Text("Take a new photo".tr),
               onTap: () async {
                 Get.back();
-                final pickedFile =
-                    await picker.pickImage(source: ImageSource.camera);
+                final pickedFile = await picker.pickImage(
+                  source: ImageSource.camera,
+                  imageQuality: 85,
+                  maxWidth: 1000,
+                );
                 _processPickedImage(pickedFile);
               },
             ),
@@ -86,8 +87,11 @@ class GiftController extends GetxController {
               title: Text("Selection from the Gallery".tr),
               onTap: () async {
                 Get.back();
-                final pickedFile =
-                    await picker.pickImage(source: ImageSource.gallery);
+                final pickedFile = await picker.pickImage(
+                  source: ImageSource.gallery,
+                  imageQuality: 85,
+                  maxWidth: 1000,
+                );
                 _processPickedImage(pickedFile);
               },
             ),
@@ -97,51 +101,55 @@ class GiftController extends GetxController {
     );
   }
 
-void _processPickedImage(XFile? pickedFile) async {
-  if (pickedFile != null) {
-    String extension = pickedFile.path.split('.').last.toLowerCase();
+  void _processPickedImage(XFile? pickedFile) async {
+    if (pickedFile != null) {
+      String extension = pickedFile.path.split('.').last.toLowerCase();
 
-    if (extension != 'jpg' && extension != 'jpeg' && extension != 'png' && extension != 'heic') {
-      Get.snackbar(
-        "", 
-        "You must choose an image in JPG, PNG, or JPEG format.".tr,
-        backgroundColor: Colors.red, 
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    try {
-      final originalBytes = await pickedFile.readAsBytes();
-      final decodedImage = img.decodeImage(originalBytes);
-
-      if (decodedImage == null) {
+      if (extension != 'jpg' &&
+          extension != 'jpeg' &&
+          extension != 'png' &&
+          extension != 'heic') {
         Get.snackbar(
-          "", 
-          "Failed to process the image.".tr,
-          backgroundColor: Colors.red, 
+          "",
+          "You must choose an image in JPG, PNG, or JPEG format.".tr,
+          backgroundColor: Colors.red,
           colorText: Colors.white,
         );
         return;
       }
 
-      // تحويل للصيغة المتوافقة (JPEG)
-      final jpgBytes = img.encodeJpg(decodedImage);
-      final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final jpgFile = await File(tempPath).writeAsBytes(jpgBytes);
+      try {
+        final originalBytes = await pickedFile.readAsBytes();
+        final decodedImage = img.decodeImage(originalBytes);
 
-      image.value = jpgFile;
-    } catch (e) {
-      Get.snackbar(
-        "", 
-        "حدث خطأ أثناء معالجة الصورة".tr,
-        backgroundColor: Colors.red, 
-        colorText: Colors.white,
-      );
+        if (decodedImage == null) {
+          Get.snackbar(
+            "",
+            "Failed to process the image.".tr,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+          return;
+        }
+
+        // تحويل للصيغة المتوافقة (JPEG)
+        final jpgBytes = img.encodeJpg(decodedImage);
+        final tempDir = await getTemporaryDirectory();
+        final tempPath =
+            '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final jpgFile = await File(tempPath).writeAsBytes(jpgBytes);
+
+        image.value = jpgFile;
+      } catch (e) {
+        Get.snackbar(
+          "",
+          "حدث خطأ أثناء معالجة الصورة".tr,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
     }
   }
-}
 
   void updateLocation(double lat, double lng, String address, String placeId,
       String placeName) {
@@ -241,42 +249,57 @@ class AddGiftPage extends GetView<GiftController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            height: constraints.maxHeight,
-            width: constraints.maxWidth,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF9EFC7),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(100000),
-                bottomRight: Radius.circular(0),
-              ),
-            ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: constraints.maxHeight * 0.02,
-                    horizontal: constraints.maxWidth * 0.1,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  height: constraints.maxHeight,
+                  width: constraints.maxWidth,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF9EFC7),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(100000),
+                      bottomRight: Radius.circular(0),
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      _buildImagePicker(),
-                      const SizedBox(height: 20),
-                      _buildInputFields(),
-                      _buildLocationSection(),
-                      _buildPriceSection(),
-                      _buildExceptionButton(),
-                      const SizedBox(height: 15),
-                      _buildSubmitButton(constraints.maxWidth),
-                    ],
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: constraints.maxHeight * 0.02,
+                          horizontal: constraints.maxWidth * 0.1,
+                        ),
+                        child: Column(
+                          children: [
+                            _buildImagePicker(),
+                            const SizedBox(height: 20),
+                            _buildInputFields(),
+                            _buildLocationSection(),
+                            _buildPriceSection(),
+                            _buildExceptionButton(),
+                            const SizedBox(height: 15),
+                            _buildSubmitButton(constraints.maxWidth),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
-          );
-        },
+          ),
+          Positioned(
+            top: 40,
+            left: Get.locale?.languageCode == 'ar' ? null : 10,
+            right: Get.locale?.languageCode == 'ar' ? 10 : null,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ],
       ),
     );
   }
