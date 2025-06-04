@@ -1,12 +1,14 @@
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/fanction/gift_card.dart';
 import 'package:giftdose/navpar/gifts/eidet_gifts.dart';
 import 'package:giftdose/translation/language_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import '../../navpar/darwar/occasions/occasions.dart';
 
 class UserGiftsSection extends StatefulWidget {
@@ -136,7 +138,7 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
         _gifts.value = data;
       } else {
         Get.snackbar(
-            "Error", response?["message"]?.toString().tr ?? "Unknown error",
+            "Error", response?["errors"]?.toString().tr ?? "Unknown error",
             backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {
