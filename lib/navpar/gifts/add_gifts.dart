@@ -175,12 +175,12 @@ class GiftController extends GetxController {
       "Authorization": "Bearer $token",
     };
 
-    if (placeName.value.trim().isEmpty) {
-      Get.snackbar("", "Address must be selected before proceeding!".tr,
-          backgroundColor: Colors.red, colorText: Colors.white);
-      _isLoading.value = false; // تأكيد إيقاف اللودنج
-      return;
-    }
+    // if (placeName.value.trim().isEmpty) {
+    //   Get.snackbar("", "Address must be selected before proceeding!".tr,
+    //       backgroundColor: Colors.red, colorText: Colors.white);
+    //   _isLoading.value = false; // تأكيد إيقاف اللودنج
+    //   return;
+    // }
 
     var request = http.MultipartRequest("POST", Uri.parse(linkaddgifts))
       ..headers.addAll(headers)

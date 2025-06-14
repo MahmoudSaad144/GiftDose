@@ -25,11 +25,20 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
   var _showGifts = true.obs;
   var isFriend = false.obs;
   var isLoadingFriendRequest = false.obs;
+  final Map<int, TextEditingController> notesControllers = {};
 
   @override
   void initState() {
     super.initState();
     _fetchUserData();
+  }
+
+  @override
+  void dispose() {
+    for (var c in notesControllers.values) {
+      c.dispose();
+    }
+    super.dispose();
   }
 
   Future<void> _cancelFriendRequest(int userId) async {
@@ -299,7 +308,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                             email: userData['email'] ?? "",
                                             username:
                                                 userData['username'] ?? "",
-                                            phone: userData['phone'] ?? "",
+                                            // phone: userData['phone'] ?? "",
                                           )),
                                         ],
                                       ),
@@ -401,6 +410,11 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
         isLoadingGifts[giftid] = false; // إعادة تعيين الحالة في حالة الخطأ
         return;
       }
+
+      // جيب الكنترولر الخاص بالهدية دي
+      final controller = notesControllers[giftid];
+      final String note = controller?.text.trim() ?? "";
+
       Locale savedLocale = await LanguageService.getSavedLanguage();
 
       final Map<String, String> headers = {
@@ -408,7 +422,6 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
         "lang": "$savedLocale",
         "Authorization": "Bearer $token"
       };
-      String note = notesController.text;
       final Map<String, dynamic> body = {"id": giftid.toString(), "note": note};
 
       final response = await _api.postRequest(buygift, body, headers);
@@ -419,6 +432,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
       } else {
         final responseData = jsonDecode(response.body);
         if (response.statusCode == 200) {
+          controller?.clear();
           _fetchUserData();
         } else {
           Get.snackbar("Error", " ${responseData["message"].toString().tr}",
@@ -473,6 +487,10 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
       Map<String, dynamic> gift, double width, double height, int giftid) {
     bool isPurchased = gift['purchased_status'] != null;
     bool isPurchasedit = gift['bought_it'] != 1;
+    final controller = notesControllers.putIfAbsent(
+      giftid,
+      () => TextEditingController(),
+    );
 
     return Stack(
       children: [
@@ -491,13 +509,38 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                   children: [
                     Column(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => Dialog(
+                                backgroundColor: Colors.transparent,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.pop(
+                                      context), // خروج لما يضغط على الصورة الكبيرة
+                                  child: InteractiveViewer(
+                                    // يخلي الصورة قابلة للتكبير والسحب
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                        "$linkservername/${gift['photo']}",
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
                               "$linkservername/${gift['photo']}",
                               height: width * 0.53,
                               width: width * 0.4,
-                              fit: BoxFit.cover),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 15,
@@ -514,14 +557,17 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                   fontSize: width * 0.04,
                                   fontWeight: FontWeight.bold)),
                           Text(
-                              "${'price'.tr}: ${gift['price']} ( ${gift['currency']})",
+                              "${'price'.tr}: ${gift['price'] ?? "No data available.".tr} ( ${gift['currency']})",
                               style: TextStyle(
                                   fontSize: width * 0.04, color: Colors.green)),
-                          Text("${'color'.tr}: ${gift['color']}",
+                          Text(
+                              "${'color'.tr}: ${gift['color'] ?? "No data available.".tr}",
                               style: TextStyle(fontSize: width * 0.035)),
-                          Text("${'Size'.tr}: ${gift['size']} ",
+                          Text(
+                              "${'Size'.tr}: ${gift['size'] ?? "No data available.".tr} ",
                               style: TextStyle(fontSize: width * 0.035)),
-                          Text("${'location'.tr}: ${gift['address']}",
+                          Text(
+                              "${'location'.tr}: ${gift['address'] ?? "No data available.".tr}",
                               style: TextStyle(fontSize: width * 0.035)),
                           Text("${'Notes'.tr}: ${gift['note'] ?? ""}",
                               style: TextStyle(fontSize: width * 0.035)),
@@ -532,9 +578,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                 ),
                 if (!isPurchased)
                   CustomTextField(
-                      controller: notesController,
-                      label: "Notes".tr,
-                      maxLines: 2),
+                      controller: controller, label: "Notes".tr, maxLines: 2),
                 if (!isPurchased)
                   Obx(() => Column(
                         children: [
@@ -779,7 +823,7 @@ class infoColum extends StatelessWidget {
   final double mywidth;
   final bool myBool;
   final String email;
-  final String phone;
+  // final String phone;
   final String Location;
   final String username;
 
@@ -787,7 +831,7 @@ class infoColum extends StatelessWidget {
     super.key,
     required this.myBool,
     required this.email,
-    required this.phone,
+    // required this.phone,
     required this.Location,
     required this.mywidth,
     required this.username,
@@ -808,10 +852,10 @@ class infoColum extends StatelessWidget {
           email,
         ),
         SizedBox(height: mywidth * 0.02),
-        infoTile(
-          Icons.phone,
-          phone,
-        ),
+        // infoTile(
+        //   Icons.phone,
+        //   phone,
+        // ),
         SizedBox(height: mywidth * 0.02),
         infoTile(
           Icons.location_pin,

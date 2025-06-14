@@ -3,15 +3,15 @@ import 'package:get/get.dart';
 
 class GiftCard extends StatefulWidget {
   final String image;
-  final String color;
+  final String? color;
 
-  final String location;
-  final String size;
+  final String? location;
+  final String? size;
   final String productName;
   final String? purchasedStatus;
   final String productDescription;
-  final String price;
-  final String currency;
+  final String? price;
+  final String? currency;
   final bool isUserProduct;
   final bool isActive; // ✅ تمرير حالة النشاط
   final Function(bool)? onStatusChanged; // ✅ إضافة كولباك لتغيير الحالة
@@ -129,25 +129,26 @@ class _GiftCardState extends State<GiftCard> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        '${'color'.tr}: ${widget.color}',
+                        '${'color'.tr}: ${widget.color ?? "No data available.".tr}',
                         style: const TextStyle(fontSize: 16),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        '${'Size'.tr}:  ${widget.size}',
+                        '${'Size'.tr}:  ${widget.size ?? "No data available.".tr}',
                         style: const TextStyle(fontSize: 16),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        '${'location'.tr}: ${widget.location}',
+                        '${'location'.tr}: ${widget.location ?? "No data available.".tr}',
                         style: const TextStyle(fontSize: 16),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "${'price'.tr}: ${widget.price}(${widget.currency})".tr,
+                        "${'price'.tr}: ${widget.price ?? ""} (${widget.currency})"
+                            .tr,
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.green,
@@ -169,15 +170,15 @@ class _GiftCardState extends State<GiftCard> {
                             Text(
                               isActive
                                   ? "Hide".tr
-                                  : "Show".tr, // ✅ تغيير النص حسب الحالة
+                                  : "Hide".tr, // ✅ تغيير النص حسب الحالة
                               style: const TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold),
                             ),
                             Switch(
-                              value: isActive,
+                              value: !isActive,
                               onChanged: (value) {
                                 setState(() {
-                                  isActive = value;
+                                  isActive = !value;
                                 });
                                 widget.onStatusChanged?.call(value);
                               },

@@ -24,6 +24,7 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
   final RxList<Map<String, dynamic>> _gifts = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> _user = <Map<String, dynamic>>[].obs;
   final RxBool _isLoading = false.obs;
+  bool _isRequesting = false;
   bool _isDisposed = false;
   int _loadLimit = 20;
   String? purchasedStatus;
@@ -60,13 +61,13 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !_isLoading.value) {
-      _loadLimit += 8;
-      _fetchGifts();
+      if (_isRequesting) return;
+      _fetchGifts(showLoading: true, scroll: true);
     }
   }
 
   Future<void> _updateGiftStatus(int giftId, bool isActive) async {
-    String myIsActive = isActive ? "1" : "0";
+    String myIsActive = isActive ? "0" : "1";
 
     try {
       final String? token = await TokenService.getToken();
@@ -106,11 +107,14 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
     }
   }
 
-  Future<void> _fetchGifts({bool showLoading = false}) async {
-    if (_isDisposed) return;
-    if (showLoading) _isLoading.value = true;
+  Future<void> _fetchGifts(
+      {bool showLoading = false, bool scroll = false}) async {
+    if (_isDisposed || _isRequesting) return;
+    _isRequesting = true;
+    if (showLoading && !scroll) _isLoading.value = true;
 
     try {
+      setState(() => _loadLimit += 10);
       final String? token = await TokenService.getToken();
       if (token == null) {
         Get.snackbar("Error", "Token not found!");
@@ -144,6 +148,7 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
     } catch (e) {
       debugPrint("Error fetching gifts: $e");
     } finally {
+      _isRequesting = false;
       if (!_isDisposed) _isLoading.value = false;
     }
   }
@@ -247,13 +252,13 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
                       image: gift["photo"] != null
                           ? "$linkservername/${gift["photo"]}"
                           : "",
-                      color: gift["color"] ?? "N/A",
-                      location: gift["address"] ?? "Unknown",
-                      size: gift["size"] ?? "N/A",
-                      productName: gift["name"] ?? "Unknown",
+                      color: gift["color"],
+                      location: gift["address"],
+                      size: gift["size"],
+                      productName: gift["name"] ?? "No data available.".tr,
                       productDescription: (gift["note"] ?? "").toString(),
-                      price: gift["price"] ?? "0",
-                      currency: gift["currency"] ?? "",
+                      price: gift["price"],
+                      currency: gift["currency"],
                       isUserProduct: true,
                       isActive: (gift["status"] == 1),
                       onStatusChanged: (bool newValue) async {
@@ -266,14 +271,15 @@ class _UserGiftsSectionState extends State<UserGiftsSection> {
                           arguments: {
                             "id": gift["id"],
                             "name": gift["name"] ?? "Unknown",
-                            "size": gift["size"] ?? "N/A",
-                            "color": gift["color"] ?? "N/A",
-                            "price": gift["price"] ?? "0",
+                            "size": gift["size"],
+                            "color": gift["color"],
+                            "price": gift["price"],
                             "note": gift["note"] ?? "",
                             "image": gift["photo"] != null
                                 ? "$linkservername/${gift["photo"]}"
                                 : "",
-                            "address": gift["address"] ?? "Unknown",
+                            "address":
+                                gift["address"] ?? "No data available.".tr,
                             "hidden_users": gift["hidden_users"] ?? [],
                           },
                         );

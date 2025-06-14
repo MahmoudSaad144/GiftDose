@@ -247,7 +247,7 @@ class EidetGiftController extends GetxController {
       if (response.statusCode == 200) {
         Get.offNamed("/4");
       } else {
-        Get.snackbar("Error", responseData["message"] ?? "Failed to add gift",
+        Get.snackbar("Error", responseData["errors"] ?? "Failed to add gift",
             backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {

@@ -1,11 +1,9 @@
-import 'package:giftdose/api/curd.dart';
-import 'package:giftdose/api/linkserver.dart';
-import 'package:giftdose/Controller/token.dart';
-
-import 'package:giftdose/translation/language_service.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:giftdose/Controller/token.dart';
+import 'package:giftdose/api/curd.dart';
+import 'package:giftdose/api/linkserver.dart';
+import 'package:giftdose/translation/language_service.dart';
 
 import '../../navpar/darwar/occasions/occasions.dart';
 
@@ -22,6 +20,8 @@ class _PurchasedGiftsSectionState extends State<PurchasedGiftsSection> {
   final RxList<Map<String, dynamic>> _gifts = <Map<String, dynamic>>[].obs;
 
   RxBool _isLoading = false.obs;
+  bool _isRequesting = false;
+
   int _loadLimit = 20;
   final ApiService _api = ApiService();
 
@@ -48,17 +48,20 @@ class _PurchasedGiftsSectionState extends State<PurchasedGiftsSection> {
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !_isLoading.value) {
-      if (mounted) {
-        setState(() => _loadLimit += 10);
-      }
-      _fetchGifts();
+      if (_isRequesting) return;
+      _fetchGifts(showLoading: true, scroll: true);
     }
   }
 
-  Future<void> _fetchGifts({bool showLoading = false}) async {
-    if (showLoading) setState(() => _isLoading.value = true);
+  Future<void> _fetchGifts(
+      {bool showLoading = false, bool scroll = false}) async {
+    if (_isRequesting) return;
+    _isRequesting = true;
+    if (showLoading && !scroll) _isLoading.value = true;
 
     try {
+      setState(() => _loadLimit += 10);
+
       final String? token = await TokenService.getToken();
       if (token == null) {
         Get.snackbar("Error", "Token not found!");
@@ -105,6 +108,7 @@ class _PurchasedGiftsSectionState extends State<PurchasedGiftsSection> {
     } catch (e) {
       debugPrint("Error fetching gifts: $e");
     } finally {
+      _isRequesting = false;
       if (mounted) {
         setState(() => _isLoading.value = false);
       }
@@ -213,14 +217,17 @@ class _PurchasedGiftsSectionState extends State<PurchasedGiftsSection> {
                     final gift = filteredGifts[index];
                     return GiftCard(
                       image: "$linkservername/${gift["gift"]["photo"]}",
-                      color: gift["gift"]["color"] ?? " ",
-                      user: gift["gift"]["user"]['username'] ?? " ",
-                      location: gift["gift"]["address"] ?? "",
-                      size: gift["gift"]["size"] ?? "",
+                      color: gift["gift"]["color"] ?? "No data available.".tr,
+                      user: gift["gift"]["user"]['username'] ??
+                          "No data available.".tr,
+                      location:
+                          gift["gift"]["address"] ?? "No data available.".tr,
+                      size: gift["gift"]["size"] ?? "No data available.".tr,
                       productName: gift["gift"]["name"] ?? "",
                       productDescription: gift["gift"]["note"] ?? "",
-                      price: gift["gift"]["price"],
-                      currency: gift["gift"]["currency"],
+                      price: gift["gift"]["price"] ?? "No data available.".tr,
+                      currency:
+                          gift["gift"]["currency"] ?? "No data available.".tr,
                       onPressed: () => _MYdeleteOccasion(index),
                     );
                   },
@@ -352,23 +359,27 @@ class _GiftCardState extends State<GiftCard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "${'name'.tr}:${widget.productName}".tr,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Text(
+                              "${'name'.tr}:${widget.productName}".tr,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            "${'username'.tr}: ${widget.user}".tr,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Text(
+                              "${'username'.tr}: ${widget.user}".tr,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),

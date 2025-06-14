@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/navpar/darwar/profile/profile.dart';
 import 'package:giftdose/translation/language_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ChatPage extends StatefulWidget {
   final String userId;
@@ -90,13 +90,12 @@ class _ChatPageState extends State<ChatPage> {
               List<Map<String, dynamic>>.from(responseData['data'] ?? [])
                   .map((message) => {
                         ...message,
-                        "created_at": DateTime.parse(message["created_at"]),
+                        "time": DateTime.parse(message["time"]),
                       })
                   .toList();
 
           // Sort messages by date
-          newMessages
-              .sort((a, b) => a["created_at"].compareTo(b["created_at"]));
+          newMessages.sort((a, b) => a["time"].compareTo(b["time"]));
 
           setState(() {
             messages = newMessages;
@@ -158,7 +157,7 @@ class _ChatPageState extends State<ChatPage> {
       final newMessage = {
         "sender": "me",
         "message": messageText,
-        "created_at": DateTime.now(),
+        "time": DateTime.now(),
       };
 
       setState(() {
@@ -274,8 +273,8 @@ class _ChatPageState extends State<ChatPage> {
                       final prevMessage = messages[index - 1];
                       if (prevMessage['sender'] == message['sender']) {
                         // Same sender, check time difference
-                        final prevTime = prevMessage['created_at'] as DateTime;
-                        final currentTime = message['created_at'] as DateTime;
+                        final prevTime = prevMessage['time'] as DateTime;
+                        final currentTime = message['time'] as DateTime;
                         if (currentTime.difference(prevTime).inMinutes < 5) {
                           showAvatar = false;
                         }
@@ -319,12 +318,23 @@ class _ChatPageState extends State<ChatPage> {
                                 color: isMe ? Colors.blue : Colors.white,
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              child: Text(
-                                message['message'] ?? "",
-                                style: TextStyle(
-                                  color: isMe ? Colors.white : Colors.black,
-                                  fontSize: 16,
-                                ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    message['message'] ?? "",
+                                    style: TextStyle(
+                                      color: isMe ? Colors.white : Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    message['time']?.toString() ?? "",
+                                    style: TextStyle(
+                                      color: isMe ? Colors.white : Colors.black,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
