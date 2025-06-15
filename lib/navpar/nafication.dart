@@ -4,7 +4,6 @@ import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/fanction/cardnofiticaton.dart';
-import 'package:giftdose/navpar/darwar/profile/profile.dart';
 import 'package:giftdose/translation/language_service.dart';
 
 class Naficationpage extends StatefulWidget {
@@ -15,7 +14,8 @@ class Naficationpage extends StatefulWidget {
 }
 
 class NaficationpageState extends State<Naficationpage> {
-  final ScrollController sc = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  bool _isRequesting = false;
   int load = 10;
   final ApiService _api = ApiService();
   List<Map<String, dynamic>> _notifications = [];
@@ -26,24 +26,28 @@ class NaficationpageState extends State<Naficationpage> {
     super.initState();
     _fetchNotifications(showLoading: true);
 
-    sc.addListener(() {
-      if (sc.offset >= sc.position.maxScrollExtent) {
+    _scrollController.addListener(() {
+      if (_scrollController.offset >=
+          _scrollController.position.maxScrollExtent) {
+        if (_isRequesting) return;
         if (mounted) {
           setState(() {
-            load++;
+            load += load;
           });
-          _fetchNotifications();
+          _fetchNotifications(scroll: true);
         }
       }
     });
   }
 
-  Future<void> _fetchNotifications({bool showLoading = false}) async {
+  Future<void> _fetchNotifications(
+      {bool showLoading = false, bool scroll = false}) async {
     if (showLoading && mounted) {
       setState(() {
         isLoading = true;
       });
     }
+    _isRequesting = true;
     final String? token = await TokenService.getToken();
     if (token == null) {
       if (mounted) {
@@ -58,22 +62,24 @@ class NaficationpageState extends State<Naficationpage> {
       "Authorization": "Bearer $token"
     };
     try {
-      var response = await _api
-          .getrequst2(usernotifications, load.toString(), "", headers: headers);
+      String apiUrl = '$usernotifications/?load=$load';
+
+      var response = await _api.getrequst3(apiUrl, "", headers: headers);
 
       if (response != null && response["data"] != null) {
         if (mounted) {
           setState(() {
-            _notifications = response['data']["data"] is List
-                ? List<Map<String, dynamic>>.from(response['data']["data"])
-                : [];
+            _notifications =
+                response['data'] != null && response['data']['data'] is List
+                    ? List<Map<String, dynamic>>.from(response['data']['data'])
+                    : [];
           });
         }
-        Get.find<ProfileController>().getData();
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error fetching gifts: $e");
     } finally {
+      _isRequesting = false;
       if (showLoading && mounted) {
         setState(() {
           isLoading = false;
@@ -84,8 +90,8 @@ class NaficationpageState extends State<Naficationpage> {
 
   @override
   void dispose() {
-    sc.removeListener(() {});
-    sc.dispose();
+    _scrollController.removeListener(() {});
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -123,7 +129,7 @@ class NaficationpageState extends State<Naficationpage> {
                       ),
                     )
                   : ListView.builder(
-                      controller: sc,
+                      controller: _scrollController,
                       itemCount: _notifications.length,
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 16),

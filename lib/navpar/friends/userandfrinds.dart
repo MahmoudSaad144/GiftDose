@@ -27,36 +27,38 @@ class _UserAndFriendsPageState extends State<UserAndFriendsPage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: ListView(
+      body: Column(
         children: [
-          Container(
-            height: height,
-            width: width,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF9EFC7),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(100000),
+          Expanded(
+            child: Container(
+              height: height,
+              width: width,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF9EFC7),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(100000),
+                ),
               ),
-            ),
-            child: SafeArea(
-              child: Column(
-                children: [
-                  SearchFriendsWidget(),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  _buildConnectButton(),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  _buildSectionButtons(),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: isFriendsList
-                        ? FriendsListSection()
-                        : RequestsListSection(),
-                  ),
-                ],
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    SearchFriendsWidget(),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    _buildConnectButton(),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    _buildSectionButtons(),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: isFriendsList
+                          ? FriendsListSection()
+                          : RequestsListSection(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/translation/language_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'chat.dart';
 
@@ -62,8 +62,7 @@ class _MessagesPageState extends State<MessagesPage> {
             : [];
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to fetch chats: $e",
-          backgroundColor: Colors.red, colorText: Colors.white);
+      debugPrint("Error fetching chats: $e");
     } finally {
       isLoading.value = false;
     }

@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:giftdose/Controller/frind%20and%20%20rqust/friend.dart';
 import 'package:giftdose/Controller/token.dart';
 import 'package:giftdose/api/curd.dart';
 import 'package:giftdose/api/linkserver.dart';
 import 'package:giftdose/navpar/message/chat.dart';
 import 'package:giftdose/translation/language_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class FriendsListSection extends StatefulWidget {
   @override
@@ -18,21 +18,22 @@ class _FriendsListSectionState extends State<FriendsListSection> {
   List<Map<String, dynamic>> _friendList = []; // تخزين بيانات الأصدقاء
   final ApiService _api = ApiService();
   bool _isDisposed = false;
-  final ScrollController sc = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  bool scroll = false;
+  bool _isRequesting = false;
   @override
   @override
   void initState() {
     super.initState();
-    _fetchfriends("");
+    _fetchfriends("", false);
 
-    sc.addListener(() {
-      if (sc.offset >= sc.position.maxScrollExtent) {
-        if (mounted) {
-          setState(() {
-            _loadLimit++;
-          });
-          _fetchfriends("");
-        }
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent &&
+          !isLoading.value) {
+        if (_isRequesting) return;
+        _loadLimit += 8; // ممكن تزود بدل 1 مرة واحدة
+        _fetchfriends("", true);
       }
     });
   }
@@ -43,9 +44,12 @@ class _FriendsListSectionState extends State<FriendsListSection> {
     super.dispose();
   }
 
-  Future<void> _fetchfriends(String query) async {
-    if (_isDisposed) return;
-    isLoading.value = true; // تفعيل اللودر
+  Future<void> _fetchfriends(String query, bool scroll) async {
+    if (_isDisposed || _isRequesting) return;
+    _isRequesting = true;
+    if (scroll == false) {
+      isLoading.value = true; // تفعيل اللودر
+    }
 
     String? token = await TokenService.getToken();
     if (token == null) {
@@ -64,15 +68,18 @@ class _FriendsListSectionState extends State<FriendsListSection> {
     try {
       var response = await _api.getrequst3(apiUrl, query, headers: headers);
       if (_isDisposed) return;
-      setState(() {
-        _friendList =
-            response['data'] != null && response['data']['data'] is List
-                ? List<Map<String, dynamic>>.from(response['data']['data'])
-                : [];
-      });
+      if (response != null) {
+        setState(() {
+          _friendList =
+              response['data'] != null && response['data']['data'] is List
+                  ? List<Map<String, dynamic>>.from(response['data']['data'])
+                  : [];
+        });
+      }
     } catch (e) {
       print("❌ Error fetching friends data: $e");
     } finally {
+      _isRequesting = false;
       if (!_isDisposed) {
         isLoading.value = false; // إيقاف اللودر بعد الانتهاء
       }
@@ -92,6 +99,7 @@ class _FriendsListSectionState extends State<FriendsListSection> {
                 child:
                     Text("No friends found".tr)) // عرض رسالة عند عدم وجود نتائج
             : ListView.builder(
+                controller: _scrollController,
                 itemCount: _friendList.length,
                 itemBuilder: (context, index) {
                   final user = _friendList[index];
